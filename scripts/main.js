@@ -13,6 +13,32 @@ adj
 kishor=[של,על,ב,ו,ל,ה]
  */
 
+function sendErrorMsg(){
+	$.ajax({
+	  type: "POST",
+	  url: "https://mandrillapp.com/api/1.0/messages/send.json",
+	  data: {
+	    'key': 'LKnQV8kj9K4Iu1EEqHIqPg',
+	    'message': {
+	      'from_email': 'ido.aizenbud@gmail.com',
+	      'to': [
+	          {
+	            'email': 'ido.aizenbud@gmail.com',
+	            'name': 'me',
+	            'type': 'to'
+	          }
+	        ],
+	      'autotext': 'true',
+	      'subject': 'error msg',
+	      'html': 'this is the message'
+	    }
+	  }
+	 }).done(function(response) {
+	   console.log(response); // if you're into that sorta thing
+	 });
+	
+}
+
 function getWordFiles(){
 	$.getJSON("../words/verbs.json", function(json) {
 	//console.log(json); // this will show the info it in firebug console

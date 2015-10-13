@@ -10,7 +10,6 @@
 <script>
 
 function parse_data(data) {
-	console.log("HERE");
 	var word = {};
 	var str = data.data;
 
@@ -55,6 +54,11 @@ function parse_data(data) {
 		return;
 	}
 	word.pronounciation = pronounciation;
+
+	var plural = str.replace(/[\s\S]*נטיות<\/b><\/td>\n<td>ר' ([\S]*)[\s\S]*/g, "$1");
+	plural = plural.replace(/[^אבגדהוזחיטכלמנסעפצקרשתםןץף]/g, "");
+	if (plural.length > 0 && plural.length < 15)
+		word.plural = plural;
 
 	word_callback(word);	
 }
