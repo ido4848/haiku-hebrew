@@ -1,0 +1,32 @@
+@font-face {
+    font-family: hebFont;
+    src: url(../fonts/tnua-libre-webfont.woff);
+}
+
+
+body{
+	background: black;
+	background-image: url("../img/bg2.jpg");
+    background-size:   cover;                      /* <------ */
+    background-repeat: no-repeat;           
+	
+}
+
+.haiku-line{
+	color: white;
+	font-family: hebFont;
+	font-size: 60px;
+
+}
+
+#rights{
+	color: white;
+	font-family: hebFont;
+	font-szie:10px;
+}
+
+/*
+#random-haiku:HOVER{
+	background: url("../img/random_haiku_down.jpg") no-repeat;
+}
+*/
