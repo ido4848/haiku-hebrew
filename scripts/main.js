@@ -13,75 +13,7 @@ adj
 kishor=[של,על,ב,ו,ל,ה]
  */
 
-function checkTime_util(i) {
-    if (i < 10) {
-        i = "0" + i;
-    }
-    return i;
-}
 
-function checkTime() {
-    var today = new Date();
-    var h = today.getHours();
-    var m = today.getMinutes();
-    var s = today.getSeconds();
-    // add a zero in front of numbers<10
-    m = checkTime_util(m);
-    s = checkTime_util(s);
-    var time= h + ":" + m + ":" + s;
-    return time;
-}
-
-function checkDate(){
-	var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth()+1; //January is 0!
-
-    var yyyy = today.getFullYear();
-    if(dd<10){
-        dd='0'+dd;
-    } 
-    if(mm<10){
-        mm='0'+mm;
-    } 
-    var date = dd+'/'+mm+'/'+yyyy;
-    return date;
-}
-
-
-function sendErrorMsg(){
-	var currHaiku1=$("#line1").text();
-	var currHaiku2=$("#line2").text();
-	var currHaiku3=$("#line3").text();
-	var date = checkDate()+", "+checkTime(); 
-
-	var subject="Error Msg in HaikuHeb, "+date;
-	var htmlMsg="This is the problematic haiku: <br>"+currHaiku1+"<br>"+currHaiku2+"<br>"+currHaiku3+"<br>Sent on the: "+date;
-
-	$.ajax({
-	  type: "POST",
-	  url: "https://mandrillapp.com/api/1.0/messages/send.json",
-	  data: {
-	    'key': 'LKnQV8kj9K4Iu1EEqHIqPg',
-	    'message': {
-	      'from_email': 'ido.aizenbud@gmail.com',
-	      'to': [
-	          {
-	            'email': 'ido.aizenbud@gmail.com',
-	            'name': 'me',
-	            'type': 'to'
-	          }
-	        ],
-	      'autotext': 'true',
-	      'subject': subject,
-	      'html': htmlMsg
-	    }
-	  }
-	 }).done(function(response) {
-	   console.log(response); // if you're into that sorta thing
-	 });
-	
-}
 
 function getWordFiles(){
 	$.getJSON("../words/verbs.json", function(json) {
@@ -101,125 +33,8 @@ function getWordFiles(){
 }
 
 
-function playGong() {
-	var state=parseInt(localStorage.getItem("sound-state"));
-	if(state==1){
-		var audio = $("#audio_bg")[0];
-		audio.volume = 0.1;
-		var audio_gong = $("#gong")[0];
-		audio_gong.volume=1.0;
-		audio_gong.play();
-
-		setTimeout(function(){
-		audio.volume = 0.2; }, 900);
-		setTimeout(function(){
-		audio.volume = 0.3; }, 1000);
-		setTimeout(function(){
-		audio.volume = 0.4; }, 1100);
-		setTimeout(function(){
-		audio.volume = 0.5; }, 1200);
-		setTimeout(function(){
-		audio.volume = 0.6; }, 1300);
-		setTimeout(function(){
-		audio.volume = 0.7; }, 1400);
-		setTimeout(function(){
-		audio.volume = 0.8; }, 1500);
-		setTimeout(function(){
-		audio.volume = 0.9; }, 1600);
-		setTimeout(function(){
-		audio.volume = 1.0; }, 1700);
-
-		
-	}
-}
-/*
-function playGong() {
-	var state=parseInt(localStorage.getItem("sound-state"));
-	if(state==1){
-		var audio = $("#audio_bg")[0];
-		audio.pause();
-		var audio_gong = $("#gong")[0];
-		audio_gong.play();
-		setTimeout(function(){
-		 audio.play(); }, 1500);
-		
-	}
-}
- */
-
-function toggleSound(){
-	var state=parseInt(localStorage.getItem("sound-state"));
-	if(state==0){
-		var audio = $("#audio_bg")[0];
-		audio.play();
-		localStorage.setItem("sound-state","1");
-		$("#toggle-sound").attr("src","../img/audio_sound.jpg");
-	}else if(state==1){
-		var audio = $("#audio_bg")[0];
-		audio.pause();
-		localStorage.setItem("sound-state","0");
-		$("#toggle-sound").attr("src","../img/audio_mute.jpg");
-	}
-}
-
 function main(){
-
-	var audio = $("#audio_bg")[0];
-	audio.play();
-	localStorage.setItem("sound-state","1");
-	$("#toggle-sound").click(toggleSound);
-
 	getWordFiles();
-	
-
-	$("#random-haiku").click(function(){
-		playGong();
-		randomHaiku(0);
-	});
-	/*
-	$( "#random-haiku" ).mouseup(function() {
-  		$( "#random-haiku" ).attr("src","../img/random_haiku.jpg");
-	});
-	$( "#random-haiku" ).mousedown(function() {
-  		$( "#random-haiku" ).attr("src","../img/random_haiku_down.jpg");
-	});
-	*/
-
-
-	$("#random-line1").click(function(){
-		playGong();
-		$("#line1").html(random5syllableLine(Math.round(Math.random())));
-	});
-	$( "#random-line1" ).mouseup(function() {
-  		$( "#random-line1" ).attr("src","../img/random_line1.jpg");
-	});
-	$( "#random-line1" ).mousedown(function() {
-  		$( "#random-line1" ).attr("src","../img/random_line1_down.jpg");
-	});
-
-	$("#random-line2").click(function(){
-		playGong();
-		$("#line2").html(random7syllableLine(Math.round(Math.random())));
-	});
-	$( "#random-line2" ).mouseup(function() {
-  		$( "#random-line2" ).attr("src","../img/random_line2.jpg");
-	});
-	$( "#random-line2" ).mousedown(function() {
-  		$( "#random-line2" ).attr("src","../img/random_line2_down.jpg");
-	});
-
-	$("#random-line3").click(function(){
-		playGong();
-		$("#line3").html(random5syllableLine(Math.round(Math.random())));
-	});
-	$( "#random-line3" ).mouseup(function() {
-  		$( "#random-line3" ).attr("src","../img/random_line3.jpg");
-	});
-	$( "#random-line3" ).mousedown(function() {
-  		$( "#random-line3" ).attr("src","../img/random_line3_down.jpg");
-	});	
-
-	$("#error").click(sendErrorMsg);
 
 }
 
@@ -228,12 +43,15 @@ function getRandomFromArr(arr){
 }
 
 function randomHaiku(haikuType){
-	$("#line1").html(random5syllableLine( Math.round(Math.random()) ));
-	$("#line2").html(random7syllableLine( Math.round(Math.random()) ));
-	$("#line3").html(random5syllableLine( Math.round(Math.random()) ));
+	localStorage.setItem("haiku-sent","0");
+	$("#line1").html(random5syllableLine( getRandomFromArr([0,1])  ));
+	$("#line2").html(random7syllableLine( getRandomFromArr([0,1,2]) ));
+	$("#line3").html(random5syllableLine( getRandomFromArr([0,1])  ));
 }
 
 function createArrByInfo(arr,info){
+	if(arr.legnth==0)
+		return [];
 	var arrByInfo=[];
 		for(var index in arr){
 			var unit=arr[index];
@@ -245,6 +63,8 @@ function createArrByInfo(arr,info){
 }
 
 function createArrBySyllable(arr,syllable){
+	if(arr.legnth==0)
+		return [];
 	var arrBySyllable=[];
 		for(var index in arr){
 			var unit=arr[index];
@@ -256,6 +76,8 @@ function createArrBySyllable(arr,syllable){
 }
 
 function createArrToSyllable(arr,syllable){
+	if(arr.legnth==0)
+		return [];
 	var arrBySyllable=[];
 		for(var index in arr){
 			var unit=arr[index];
@@ -266,245 +88,105 @@ function createArrToSyllable(arr,syllable){
 	return arrBySyllable;
 }
 
+
 function random5syllableLine(type){
 	var line="";
 	if(type==0){
 		//shem adje
-		flag=true;
-		while(flag){
-			flag=false;
-			var syllableLeft=5;
-			var info="";
-
-			var shems=JSON.parse(localStorage.getItem("shems"));
-			var word1=getRandomFromArr(shems);
-			syllableLeft-=word1['syllable'];
-			info=word1['info'];
-			word1=word1['word'];
-			//console.log(word1+" "+info+" "+syllableLeft);
-
-
-			var adjes=JSON.parse(localStorage.getItem("adjes"));
-			var adjesBy=createArrBySyllable(adjes,syllableLeft);
-			adjesBy=createArrByInfo(adjesBy,info);
-			if(adjesBy.length==0){
-				flag=true;
-				continue;
-			}
-			
-			var word2=getRandomFromArr(adjesBy);
-			word2=word2['word'];
-			line=word1+" "+word2;
-
-		}
-
-
-	}
-	else if(type==1){
+		line=createLine(["shem","adje"],5);
+	}else if(type==1){
 		//shem verb
-		flag=true;
-		while(flag){
-			flag=false;
-			var syllableLeft=5;
-			var info="";
-
-			var shems=JSON.parse(localStorage.getItem("shems"));
-			var word1=getRandomFromArr(shems);
-			syllableLeft-=word1['syllable'];
-			info=word1['info'];
-			word1=word1['word'];
-			//console.log(word1+" "+info+" "+syllableLeft);
-
-
-			var verbs=JSON.parse(localStorage.getItem("verbs"));
-			var verbsBy=createArrBySyllable(verbs,syllableLeft);
-			verbsBy=createArrByInfo(verbsBy,info);
-			if(verbsBy.length==0){
-				flag=true;
-				continue;
-			}
-			
-			var word2=getRandomFromArr(verbsBy);
-			word2=word2['word'];
-
-			line=word1+" "+word2;
-		}
-
-
-	}
-	else{
+		line=createLine(["shem","verb"],5);
+	}else{
 		line="חמש הברות";
 	}
-
-	return line;
+	return line
 }
 
 function random7syllableLine(type){
 	var line="";
 	if(type==0){
 		//shem adje verb
-		flag=true;
-		while(flag){
-			flag=false;
-			var syllableLeft=7;
-			var info="";
-
-			var shems=JSON.parse(localStorage.getItem("shems"));
-			var word1=getRandomFromArr(shems);
-			syllableLeft-=word1['syllable'];
-			info=word1['info'];
-			word1=word1['word'];
-			//console.log(word1+" "+info+" "+syllableLeft);
-
-			var adjes=JSON.parse(localStorage.getItem("adjes"));
-			var adjesBy=createArrToSyllable(adjes,syllableLeft);
-			adjesBy=createArrByInfo(adjesBy,info);
-			if(adjesBy.length==0){
-				flag=true;
-				continue;
-			}
-			
-			var word2=getRandomFromArr(adjesBy);
-			syllableLeft-=word2['syllable'];
-			word2=word2['word'];
-			//console.log(word2+" "+info+" "+syllableLeft);
-
-
-			var verbs=JSON.parse(localStorage.getItem("verbs"));
-			var verbsBy=createArrBySyllable(verbs,syllableLeft);
-			verbsBy=createArrByInfo(verbsBy,info);
-			if(verbsBy.length==0){
-				flag=true;
-				continue;
-			}
-			
-			var word3=getRandomFromArr(verbsBy);
-			word3=word3['word'];
-
-			line=word1+" "+word2+" "+word3 ;
-		}
-
-
-	}
-	if(type==1){
+		line=createLine(["shem","adje","verb"],7);
+	}else if(type==1){
 		//shem verb adje
-		flag=true;
-		while(flag){
-			flag=false;
-			var syllableLeft=7;
-			var info="";
+		line=createLine(["shem","verb","adje"],7);
+	}else if(type==2){
+		//shem verb shem
+		line=createLine(["shem","verb","shem"],7);
+	}else{
+		line="יש פה שבע הברות";
+	}
+	return line
+}
 
-			var shems=JSON.parse(localStorage.getItem("shems"));
-			var word1=getRandomFromArr(shems);
-			syllableLeft-=word1['syllable'];
-			info=word1['info'];
-			word1=word1['word'];
-			//console.log(word1+" "+info+" "+syllableLeft);
 
-			var verbs=JSON.parse(localStorage.getItem("verbs"));
-			var verbsBy=createArrToSyllable(verbs,syllableLeft);
-			verbsBy=createArrByInfo(verbsBy,info);
-			if(verbsBy.length==0){
-				flag=true;
-				continue;
+
+
+function createLine(typeArr,syllablesIn){
+	var flag=true;
+	while(flag){
+		words=[];
+		syllables=syllablesIn;
+		flag=false;
+		var info="";
+		for(var i in typeArr){
+			if(flag){
+				break;
 			}
-			
-			var word2=getRandomFromArr(verbsBy);
-			syllableLeft-=word2['syllable'];
-			word2=word2['word'];
-			//console.log(word2+" "+info+" "+syllableLeft);
+			var currType=typeArr[i];
+			var availableWords=JSON.parse(localStorage.getItem(currType+"s"));
+			if(i==0){
+				if(availableWords.length==0){
+					flag=true;
+					continue;
+				}
+				var wordObj=getRandomFromArr(availableWords);
+				syllables-=wordObj['syllable'];
+				info=wordObj['info'];
+				words.push(wordObj['word']);
 
+			}else if(i==typeArr.length-1){
+				availableWords=createArrByInfo(createArrBySyllable(availableWords,syllables),info);
+				if(availableWords.length==0){
+					flag=true;
+					continue;
+				}
+				var wordObj=getRandomFromArr(availableWords);
+				syllables-=wordObj['syllable'];
+				words.push(wordObj['word']);
 
-			var adjes=JSON.parse(localStorage.getItem("adjes"));
-			var adjesBy=createArrBySyllable(adjes,syllableLeft);
-			adjesBy=createArrByInfo(adjesBy,info);
-			if(adjesBy.length==0){
-				flag=true;
-				continue;
+			}else{
+				availableWords=createArrByInfo(createArrToSyllable(availableWords,syllables),info);
+				if(availableWords.length==0){
+					flag=true;
+					continue;
+				}
+				var wordObj=getRandomFromArr(availableWords);
+				syllables-=wordObj['syllable'];
+				words.push(wordObj['word']);
 			}
-			
-			var word3=getRandomFromArr(adjesBy);
-			word3=word3['word'];
 
-			line=word1+" "+word2+" "+word3 ;	
+		}//for end
+
+		if(flag){
+			continue;
 		}
 
+		for(var j in words){
+			if(j==0){
+				line=words[0];
+			}else{
+				line+=" "+words[j];
+			}
+		}
 
-	}
-	return line;
+	}//while end
+	return line
 }
+
+
 
 
 $(document).ready(main);
 
-
-
-
-
-/*
-
-		if(syllableLeft==1){
-			var word2=word1;
-			var word1=getRandomFromArr(["ב","ה"]);
-			if(word1.length==1)
-				line=word1+""+word2;
-			else
-				line=word1+" "+word2;
-		}else{
-			var verbs=JSON.parse(localStorage.getItem("verbs"));
-			var verbsBy=createArrBySyllable(verbs,syllableLeft);
-			verbsBy=createArrByInfo(verbsBy,info);
-			console.log(verbsBy);
-			
-			var word2=getRandomFromArr(verbsBy);
-			word2=word2['word'];
-
-			line=word1+" "+word2;
-		}
-
-
-		if(syllableLeft==1){
-			var word2=word1;
-			var word1=getRandomFromArr(["ב","ה"]);
-			if(word1.length==1)
-				line=word1+""+word2;
-			else
-				line=word1+" "+word2;
-		}else{
-			var verbs=JSON.parse(localStorage.getItem("verbs"));
-			var verbsBy=createArrBySyllable(verbs,syllableLeft);
-			verbsBy=createArrByInfo(verbsBy,info);
-			console.log(verbsBy);
-			
-			var word2=getRandomFromArr(verbsBy);
-			word2=word2['word'];
-
-			line=word1+" "+word2;
-		}
-
-function main_old2(){
-	request = new XMLHttpRequest();
-	request.open('GET', 'test.json', true);
-
-	request.onload = function() {
-	  if (request.status >= 200 && request.status < 400){
-	    // Success!
-	    data = (request.responseText);
-	    console.log(data);
-    	data=JSON.parse(data);
-		console.log(data);
-
-	  } else {
-	    // We reached our target server, but it returned an error
-
-	  }
-	};
-
-	request.onerror = function() {
-	  // There was a connection error of some sort
-	};
-
-	request.send()
-}
-
- */
