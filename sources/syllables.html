@@ -1,0 +1,28 @@
+<html>
+<head>
+</head>
+<body>
+
+<input id="word" />
+<button onclick="document.getElementById('ans').innerHTML = countSyllables(document.getElementById('word').value);">
+	Syllables ?
+</button>
+<label>Answer is</label>
+<label id="ans"> </label>
+
+<script>
+function countSyllables(word) {
+	var count = 0;
+	word = word.replace(/ayi/g, function() {
+		count += 1;
+		return "";
+	});
+	word = word.replace(/[aeiou]+/g, function() {
+		count += 1;
+		return "";
+	});
+	return count;
+}
+</script>
+</body>
+</html>
