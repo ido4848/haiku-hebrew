@@ -164,7 +164,6 @@ function parse_verb(data) {
 		if (!word_str.match(/[-\.,]/g) && !word_str.match("או") && word_str != "") word.binyanim[i] = to_ktiv_hasser(word_str);
 	}
 
-	console.log(word);
 	return word;
 }
 
@@ -254,25 +253,25 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 			currWordObj.info="יחיד";
 			currWordObj.syllable=countSyllablesVerb("יחיד",i);
 
-			console.log(currWordObj);
-
 			stats.infos[currWordObj.info]=parseInt(stats.infos[currWordObj.info])+1;
 			stats.avg=(parseFloat(stats.avg)*(parseFloat(stats.found)-1)+parseFloat(currWordObj.syllable))/(parseFloat(stats.found));
 
 			if(i==0||i==4||i==1){
 				stats.types["verb"]=parseInt(stats.types["verb"])+1;
-				var arr=JSON.parse(localStorage.getItem("added-verbs"));
-				if(i==1)
-					currWordObj.word=currWordObj.word+" מ";
-				arr.push(currWordObj);
-				localStorage.setItem("added-verbs",JSON.stringify(arr));
+				currWordObj['type']="verb";
+				if(i==1){
+					continue;//better be safe, not sorry
+					currWordObj.word=currWordObj.word+" מ";//it is debateable
+				}
 			}
 			if(i==2||i==3||i==5|i==6){
 				stats.types["adje"]=parseInt(stats.types["adje"])+1;
-				var arr=JSON.parse(localStorage.getItem("added-adjes"));
-				arr.push(currWordObj);
-				localStorage.setItem("added-adjes",JSON.stringify(arr));				
+				currWordObj.type="adje";				
 			}
+
+			var arr=JSON.parse(localStorage.getItem("added-words"));
+			arr.push(currWordObj);
+			localStorage.setItem("added-words",JSON.stringify(arr));
 
 			/*
 			Plural? female? female plural?
@@ -294,20 +293,18 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 		newWordObj.word=wordObj['hebword'];
 		newWordObj.syllable=String(countSyllables(wordObj['pronounciation']));
 		newWordObj.info=wordObj['sex'];
+		newWordObj['type']=wordObj['type'];
+
+		stats.types[newWordObj.type]=parseInt(stats.types[newWordObj.type])+1;
 		stats.infos[newWordObj.info]=parseInt(stats.infos[newWordObj.info])+1;
 		stats.avg=(parseFloat(stats.avg)*(parseFloat(stats.found)-1)+parseFloat(newWordObj.syllable))/(parseFloat(stats.found));
 
-		if(wordObj['type']=="shem"){
-			stats.types["shem"]=parseInt(stats.types["shem"])+1;
-			var arr=JSON.parse(localStorage.getItem("added-shmes"));
-			arr.push(newWordObj);
-			localStorage.setItem("added-shmes",JSON.stringify(arr));
-		}else if(wordObj['type']=="adje"){
-			stats.types["adje"]=parseInt(stats.types["adje"])+1;
-			var arr=JSON.parse(localStorage.getItem("added-adjes"));
-			arr.push(newWordObj);
-			localStorage.setItem("added-adjes",JSON.stringify(arr));
-		}
+
+
+		var arr=JSON.parse(localStorage.getItem("added-words"));
+		arr.push(newWordObj);
+		localStorage.setItem("added-words",JSON.stringify(arr));
+
 
 		var pluralObj={};
 		if(wordObj['plural']!=="unknown"){
@@ -315,7 +312,11 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 			stats.hasPlural+=1;
 			pluralObj.word=wordObj['plural'];
 			pluralObj.syllable=String(parseInt(newWordObj.syllable)+ wordObj.n_of_words);
+			pluralObj['type']=wordObj['type'];
+
+			stats.types[newWordObj.type]=parseInt(stats.types[newWordObj.type])+1;
 			stats.avg=(parseFloat(stats.avg)*(parseFloat(stats.found)-1)+parseFloat(pluralObj.syllable))/(parseFloat(stats.found));
+			
 			if(newWordObj.info==="יחיד"){
 				pluralObj.info="רבים";
 				stats.infos["רבים"]=parseInt(stats.infos["רבים"])+1;
@@ -324,17 +325,9 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 				stats.infos["רבות"]=parseInt(stats.infos["רבות"])+1;
 			}
 
-			if(wordObj['type']=="shem"){
-				stats.types["shem"]=parseInt(stats.types["shem"])+1;
-				var arr=JSON.parse(localStorage.getItem("added-shmes"));
-				arr.push(pluralObj);
-				localStorage.setItem("added-shmes",JSON.stringify(arr));
-			}else if(wordObj['type']=="adje"){
-				stats.types["adje"]=parseInt(stats.types["adje"])+1;
-				var arr=JSON.parse(localStorage.getItem("added-adjes"));
-				arr.push(pluralObj);
-				localStorage.setItem("added-adjes",JSON.stringify(arr));
-			}
+			var arr=JSON.parse(localStorage.getItem("added-words"));
+			arr.push(pluralObj);
+			localStorage.setItem("added-words",JSON.stringify(arr));
 		}
 
 	}
@@ -347,11 +340,33 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 }
 
 
+
+
+function createArrByType(arr,type){
+	if(arr.legnth==0)
+		return [];
+	var arrByType=[];
+		for(var index in arr){
+			var unit=arr[index];
+			if(unit['type']==type){
+				arrByType.push(unit);
+			}
+		}
+	return arrByType;
+}
+
 function displayJSONdata(){
-	var shemsJSON=localStorage.getItem("added-shmes");
-	var adjesJSON=localStorage.getItem("added-adjes");
-	var verbsJSON=localStorage.getItem("added-verbs");
-	disp="Shems:<br>"+shemsJSON+"<br><br>Adjes:<br>"+adjesJSON+"<br><br>Verbs:<br>"+verbsJSON;
+	var wordsJSON=JSON.parse(localStorage.getItem("added-words"));
+	var types=JSON.parse(localStorage.getItem("types"));
+	disp=""
+	for(var i=0;i<types.length;i++){
+		if(i==0){
+			disp=disp+types[i]+"s:<br>"+JSON.stringify(createArrByType(wordsJSON,types[i]));
+		}else{
+			disp=disp+"<br><br>"+types[i]+"s:<br>"+JSON.stringify(createArrByType(wordsJSON,types[i]));
+		}
+	}
+	disp=disp+"<br><br><br>All Words:<br>"+JSON.stringify(wordsJSON);
 	$("#data").html(disp);
 }
 
@@ -359,7 +374,17 @@ function displayStats(statsObj){
 	var disp=statsObj['found']+" out of "+statsObj['originCount']+" words found";
 	disp+="<br>"+statsObj['hasPlural']+" words has a plural form available";
 	disp+="<br>Average syllables for a word is "+(statsObj.avg);
-	disp+="<br>"+statsObj['types']['shem']+" shems | "+statsObj['types']['adjes']+" adjes | "+statsObj['types']['verbs']+" verbs";
+
+	disp+="<br>"
+	var types=JSON.parse(localStorage.getItem("types"));
+	for(var i=0;i<types.length;i++){
+		if(i==types.length-1){
+			disp+=statsObj['types'][types[i]]+" "+types[i]+"s";
+		}else{
+			disp+=statsObj['types'][types[i]]+" "+types[i]+"s | ";
+		}
+		
+	}
 	disp+="<br>"+statsObj['infos']['יחיד']+" male | "+statsObj['infos']['יחידה']+" female | "+statsObj['infos']['רבים']+" plural male | "+statsObj['infos']['רבות']+" plural female";
 	$("#stats").html(disp);
 }
@@ -370,29 +395,30 @@ function writeToFile2(){
 }
 
 function main(){
-	localStorage.setItem("added-shmes",JSON.stringify([]));
-	localStorage.setItem("added-verbs",JSON.stringify([]));
-	localStorage.setItem("added-adjes",JSON.stringify([]));
+	localStorage.setItem("added-words",JSON.stringify([]));
+	localStorage.setItem("types",JSON.stringify(["shem","adje","verb"]));
 	$("#mail").click(mailMeTheArrays);
 
 	$("#submit").click(function(){
-		var count=parseInt($("#num-words").val());
-
-		localStorage.setItem("count",JSON.stringify(count));
 		$("#menu").addClass("hidden");
 		$("#stats-heading").removeClass("hidden");
+
+		var count=parseInt($("#num-words").val());
 		var delay=parseInt($("#delay").val());
-		console.log(delay);
 		var checked=document.getElementById('skip-shems').checked;
-		console.log(checked);
+
+		localStorage.setItem("count",JSON.stringify(count));
 		localStorage.setItem("skip-shems",JSON.stringify(checked));
 
-
 		var stats={};
+		var types=JSON.parse(localStorage.getItem("types"));
+		stats.types={};
+		for(var i=0;i<types.length;i++)
+			stats.types[types[i]]=0;
+
+		stats.infos={"יחיד":"0","יחידה":"0","רבים":"0","רבות":"0"};
 		stats.originCount=count;
 		stats.found=0;
-		stats.types={"shem":"0","adje":"0","verb":"0"};
-		stats.infos={"יחיד":"0","יחידה":"0","רבים":"0","רבות":"0"};
 		stats.hasPlural=0;
 		stats.avg=0;
 
@@ -469,13 +495,12 @@ function checkDate(){
 
 
 function mailMeTheArrays(){
-	var shemsJSON=localStorage.getItem("added-shmes");
-	var adjesJSON=localStorage.getItem("added-adjes");
-	var verbsJSON=localStorage.getItem("added-verbs");
+	var wordsJSON=localStorage.getItem("added-words");
+
 	var date = checkDate()+", "+checkTime(); 
 
 	var subject="Word Array, "+date;
-	var htmlMsg="These are the words arrays: <br><br>Shems:<br><br>"+shemsJSON+"<br><br>Adjes:<br><br>"+adjesJSON+"<br><br>Verbs:<br><br>"+verbsJSON+"<br><br>Sent on the: "+date;
+	var htmlMsg="This is the words array: <br><br>All Words:<br><br>"+wordsJSON+"<br><br>Sent on the: "+date;
 
 	$.ajax({
 	  type: "POST",

@@ -32,7 +32,7 @@ function getWordFiles(k){
 
 
 function main(){
-	var k=3;
+	var k=5;
 	getWordFiles(k);
 
 }
