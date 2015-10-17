@@ -238,7 +238,6 @@ function printWordToScreen(wordObj) {
 
 function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 	var stats=JSON.parse(localStorage.getItem("stats"));
-	var count=parseInt(JSON.parse(localStorage.getItem("count")));
 	
 	if(wordObj['type']=="verb"){
 		var binyanim=wordObj['binyanim'];
@@ -247,48 +246,89 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 			if(binyan==undefined)
 				continue;
 
-			stats.found+=1;count-=1;
+			stats.found+=1;
 			var currWordObj={};
 			currWordObj.word=binyan;
 			currWordObj.info="יחיד";
-			currWordObj.syllable=countSyllablesVerb("יחיד",i);
+			currWordObj.syllable=String(countSyllablesVerb("יחיד",i));
 
 			stats.infos[currWordObj.info]=parseInt(stats.infos[currWordObj.info])+1;
 			stats.avg=(parseFloat(stats.avg)*(parseFloat(stats.found)-1)+parseFloat(currWordObj.syllable))/(parseFloat(stats.found));
 
+
+			//and now for the female and plurals
+
+			stats.found+=3;
+			var femaleObj={};femaleObj.info="יחידה";femaleObj.syllable=String(parseInt(currWordObj.syllable)+1);
+			var malePluralObj={};malePluralObj.info="רבים";malePluralObj.syllable=currWordObj.syllable;
+			var femalePluralObj={};femalePluralObj.info="רבות";femalePluralObj.syllable=currWordObj.syllable;
+
+			stats.infos[femaleObj.info]=parseInt(stats.infos[femaleObj.info])+1;
+			stats.infos[malePluralObj.info]=parseInt(stats.infos[malePluralObj.info])+1;
+			stats.infos[femalePluralObj.info]=parseInt(stats.infos[femalePluralObj.info])+1;
+			
+
+			var up=parseFloat(stats.avg)*(parseFloat(stats.found)-3);
+			up+=parseInt(femaleObj.syllable)+parseInt(malePluralObj.syllable)+parseInt(femalePluralObj.syllable);
+			stats.avg=parseFloat(up)/(parseFloat(stats.found));
+
+			
+			var str=currWordObj.word;
+			var charsEnd = ['ם','ן','ץ','ף','ך'];
+			var lastCharIdx = charsEnd.indexOf(str[str.length-1]); 
+			if(lastCharIdx!=-1){
+				var str=str.substring(0, str.length - 1);
+				if(lastCharIdx==0)
+					str+="מ";
+				if(lastCharIdx==1)
+					str+="נ";
+				if(lastCharIdx==2)
+					str+="צ";
+				if(lastCharIdx==3)
+					str+="פ";
+				if(lastCharIdx==4)
+					str+="כ";
+
+			}
+
+			femaleObj.word=str+"ת";
+			malePluralObj.word=str+"ים";
+			femalePluralObj.word=str+"ות";
+
+			
 			if(i==0||i==4||i==1){
-				stats.types["verb"]=parseInt(stats.types["verb"])+1;
+				stats.types["verb"]=parseInt(stats.types["verb"])+4;
 				currWordObj['type']="verb";
+				femaleObj['type']="verb";
+				malePluralObj['type']="verb";
+				femalePluralObj['type']="verb";
 				if(i==1){
 					continue;//better be safe, not sorry
 					currWordObj.word=currWordObj.word+" מ";//it is debateable
 				}
 			}
 			if(i==2||i==3||i==5|i==6){
-				stats.types["adje"]=parseInt(stats.types["adje"])+1;
-				currWordObj.type="adje";				
+				stats.types["adje"]=parseInt(stats.types["adje"])+4;
+				currWordObj.type="adje";
+				femaleObj.type="adje";
+				malePluralObj.type="adje";
+				femalePluralObj.type="adje";				
 			}
 
+			
 			var arr=JSON.parse(localStorage.getItem("added-words"));
 			arr.push(currWordObj);
+			arr.push(femaleObj);
+			arr.push(malePluralObj);
+			arr.push(femalePluralObj);
 			localStorage.setItem("added-words",JSON.stringify(arr));
 
-			/*
-			Plural? female? female plural?
-			 
-			if(wordObj['type']=="verb"){
-				stats.types["verb"]=parseInt(stats.types["verb"])+1;
-				var arr=JSON.parse(localStorage.getItem("added-verbs"));
-				arr.push(pluralObj);
-				localStorage.setItem("added-verbs",JSON.stringify(arr));
-			}
-			*/
 			
 
 		}
 
 	}else{
-		stats.found+=1;count-=1;
+		stats.found+=1;
 		var newWordObj={};
 		newWordObj.word=wordObj['hebword'];
 		newWordObj.syllable=String(countSyllables(wordObj['pronounciation']));
@@ -308,7 +348,7 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 
 		var pluralObj={};
 		if(wordObj['plural']!=="unknown"){
-			stats.found+=1;count-=1;
+			stats.found+=1;
 			stats.hasPlural+=1;
 			pluralObj.word=wordObj['plural'];
 			pluralObj.syllable=String(parseInt(newWordObj.syllable)+ wordObj.n_of_words);
@@ -333,7 +373,6 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 	}
 
 	localStorage.setItem("stats",JSON.stringify(stats));
-	localStorage.setItem("count",JSON.stringify(count));
 	displayStats(stats);
 	displayJSONdata();
 
@@ -407,7 +446,6 @@ function main(){
 		var delay=parseInt($("#delay").val());
 		var checked=document.getElementById('skip-shems').checked;
 
-		localStorage.setItem("count",JSON.stringify(count));
 		localStorage.setItem("skip-shems",JSON.stringify(checked));
 
 		var stats={};
@@ -430,7 +468,6 @@ function main(){
 			setTimeout(function(){
 		 		getWord(func);
 			 }, delay*i);
-			count=parseInt(JSON.parse(localStorage.getItem("count")));
 
 		}
 		

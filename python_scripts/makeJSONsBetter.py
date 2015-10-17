@@ -106,10 +106,10 @@ mergeJSONs(files,newFile)
 '''
 
 
-file1="../words/shems2-dups.json"
+file1="../words/words4.json"
 file2="../words/shems2.json"
 
-deleteDuplicatesFromJSON(file1,file2)
+deleteDuplicatesFromJSON(file1,file1)
 '''
 
 files=["../words/add-shems-total-no-dups.json","../words/shems.json"]
