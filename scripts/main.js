@@ -15,26 +15,26 @@ kishor=[של,על,ב,ו,ל,ה]
 
 
 
-function getWordFiles(){
-	$.getJSON("../words/verbs.json", function(json) {
-	//console.log(json); // this will show the info it in firebug console
-	localStorage.setItem("verbs",JSON.stringify(json));
-	});
+function getWordFiles(k){
 
-	$.getJSON("../words/shems.json", function(json) {
-	//console.log(json); // this will show the info it in firebug console
-	localStorage.setItem("shems",JSON.stringify(json));
-	});
+	var data=[]
 
-	$.getJSON("../words/adjes.json", function(json) {
-	//console.log(json); // this will show the info it in firebug console
-	localStorage.setItem("adjes",JSON.stringify(json));
-	});
+	for(var i=0;i<k;i++){
+		var currFile="../words/words"+i+".json";
+		$.getJSON(currFile, function(currData) {
+			for(var j=0;j<currData.length;j++){
+				data.push(currData[j])
+			}
+			localStorage.setItem("words",JSON.stringify(data));
+		});
+	}
+
 }
 
 
 function main(){
-	getWordFiles();
+	var k=3;
+	getWordFiles(k);
 
 }
 
@@ -47,6 +47,19 @@ function randomHaiku(haikuType){
 	$("#line1").html(random5syllableLine( getRandomFromArr([0,1])  ));
 	$("#line2").html(random7syllableLine( getRandomFromArr([0,1,2]) ));
 	$("#line3").html(random5syllableLine( getRandomFromArr([0,1])  ));
+}
+
+function createArrByType(arr,type){
+	if(arr.legnth==0)
+		return [];
+	var arrByType=[];
+		for(var index in arr){
+			var unit=arr[index];
+			if(unit['type']==type){
+				arrByType.push(unit);
+			}
+		}
+	return arrByType;
 }
 
 function createArrByInfo(arr,info){
@@ -121,8 +134,6 @@ function random7syllableLine(type){
 }
 
 
-
-
 function createLine(typeArr,syllablesIn){
 	var flag=true;
 	while(flag){
@@ -135,19 +146,20 @@ function createLine(typeArr,syllablesIn){
 				break;
 			}
 			var currType=typeArr[i];
-			var availableWords=JSON.parse(localStorage.getItem(currType+"s"));
+			var availableWords=JSON.parse(localStorage.getItem("words"));
 			if(i==0){
 				if(availableWords.length==0){
 					flag=true;
 					continue;
 				}
+				availableWords=createArrByType(availableWords,currType);
 				var wordObj=getRandomFromArr(availableWords);
 				syllables-=wordObj['syllable'];
 				info=wordObj['info'];
 				words.push(wordObj['word']);
 
 			}else if(i==typeArr.length-1){
-				availableWords=createArrByInfo(createArrBySyllable(availableWords,syllables),info);
+				availableWords=createArrByType(createArrByInfo(createArrBySyllable(availableWords,syllables),info),currType);
 				if(availableWords.length==0){
 					flag=true;
 					continue;
@@ -157,7 +169,7 @@ function createLine(typeArr,syllablesIn){
 				words.push(wordObj['word']);
 
 			}else{
-				availableWords=createArrByInfo(createArrToSyllable(availableWords,syllables),info);
+				availableWords=createArrByType(createArrByInfo(createArrToSyllable(availableWords,syllables),info),currType);
 				if(availableWords.length==0){
 					flag=true;
 					continue;
