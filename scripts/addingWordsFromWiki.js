@@ -22,13 +22,62 @@ function countSyllables(word) {
 	return count;
 }
 
-function parse_data(data) {
+
+function countSyllablesVerb(info,binyan) {
+	// info is in {"יחיד","יחידה","רבים","רבות"}
+	//  binyan is in {0,...,6}
+	//  it is assumed the GIZRA is SHLEMIM
+	
+	if(info=="יחיד"){
+		if(binyan==0)
+			return 2;
+		if(binyan==1)
+			return 3;//adding מ
+		if(binyan==2)
+			return 2;//used as adje
+		if(binyan==3)
+			return 2;//used as adje
+		if(binyan==4)
+			return 3;
+		if(binyan==5)
+			return 3;//used as adje
+		if(binyan==6)
+			return 3;//used as adje
+
+
+
+	}
+	
+
+	return 0;
+}
+
+function to_ktiv_hasser(word) {
+	word = word.replace(/\u05BB/g, "ו"); // kubbutz turns into vav
+	word = word.replace(/\u05BC/g, ""); // bye dagesh
+	word = word.replace(/\uFB31/g, "ב"); // bye dagesh
+	word = word.replace(/\uFB3B/g, "כ"); // bye dagesh
+	word = word.replace(/\uFB44/g, "פ"); // bye dagesh
+	word = word.replace(/\u05B4([^י])/g, "י$1"); // hirik hasser
+	word = word.replace(/([^ו])\u05B9/g, "$1ו"); // holam hasser
+	word = word.replace(/[\uFB2B\uFB2A]/g, "ש"); // shin sin
+	word = word.replace(/[\u05B0-\u05BE]/g, ""); // delete all other nikkud
+	return word;
+}
+
+
+function parse_noun_adje(data) {
 	var word = {};
 	var str = data.data;
 
 	var hebword = str.replace(/[\s\S]*<title>(.*) - [\s\S]*/g, "$1");
 	hebword = hebword.replace("-", " ");
 	word.hebword = hebword;
+
+	if (word.hebword.match(/a-zA-Z/g)) {
+		// Bad word
+		return undefined;
+	}
 
 	var n_of_words = 1;
 	for (var i = 0; i < word.hebword.length; i++)
@@ -41,8 +90,7 @@ function parse_data(data) {
 	else if (type == "פעל") word.type = "verb"; // fuck. this never happens.
 	else {		
 		// Bad word
-		getWord(word_callback);
-		return;
+		return undefined;
 	}
 	
 	var sex_str = str.replace(/[\s\S]*?(<b>מין<\/b><\/td>\n<td>.*?<\/td>)[\s\S]*/g, "$1");
@@ -50,8 +98,7 @@ function parse_data(data) {
 	else if (sex_str.match("<b>מין<\/b><\/td>\n<td>נקבה<\/td>")) word.sex = "יחידה";
 	else {
 		// Bad word
-		getWord(word_callback);
-		return;
+		return undefined;
 	}
 
 	var pronounciation = str.replace(/[\s\S]*?הגייה[\s\S]*?ltr;">([\s\S]*?)<\/td>[\s\S]*/g, "$1");
@@ -59,14 +106,12 @@ function parse_data(data) {
 
 	if (pronounciation.match(/^<!DOCTYPE/)) {
 		// Bad word
-		getWord(word_callback);
-		return;
+		return undefined;
 	}
 	pronounciation = pronounciation.replace(/<.*?>/g, "");
 	if (pronounciation.replace(/\s/g, "") == "") {
 		// Bad word
-		getWord(word_callback);
-		return;
+		return undefined;
 	}
 	word.pronounciation = pronounciation;
 
@@ -87,17 +132,78 @@ function parse_data(data) {
 	if (plural.replace(/\s/g, '').length > 0 && plural.length < 25)
 		word.plural = plural;
 
-	word_callback(word);	
+	return word;	
 }
 
+function parse_verb(data) {
+	var word = {};
+	var str = data.data;
+
+	var hebword = str.replace(/[\s\S]*<title>(.*) - [\s\S]*/g, "$1");
+	hebword = hebword.replace("-", " ");
+	word.hebword = hebword;
+
+	if (!word.hebword.match(/(שורש)/g)) return undefined;
+	if (!str.match(' הוא שורש מ<a href="/wiki/%D7%A0%D7%A1%D7%A4%D7%97:%D7%92%D7%96%D7%A8%D7%AA_%D7%94%D7%A9%D7%9C%D7%9E%D7%99%D7%9D"')) {
+		if (!str.match(' הוא שורש מ<a href="/wiki/%D7%92%D7%96%D7%A8%D7%AA_%D7%94%D7%A9%D7%9C%D7%9E%D7%99%D7%9D"')) {
+			return undefined;
+		}
+	}
+
+	word.type = "verb";
+	word.binyanim = [];
+
+	var table = str.match(/<table border="1" style="border-collapse: collapse; border: solid 1px black; text-align: center;" cellpadding="3" cellspacing="0">[\s\S]*?<\/table>/g);
+	if (table) table = table[0];
+	else return undefined;
+
+	var table_rows = table.match(/<tr>[\s\S]*?<\/tr>/g);
+	for (var i = 0; i < table_rows.length; i++) {
+		var table_cells = table_rows[i].match(/<td>[\s\S]*?<\/td>/g);
+		var word_str = table_cells[1].replace(/<.*?>/g, "").replace(" ", "");
+		if (!word_str.match(/[-\.,]/g) && !word_str.match("או") && word_str != "") word.binyanim[i] = to_ktiv_hasser(word_str);
+	}
+
+	console.log(word);
+	return word;
+}
+
+function parse_data(data) {
+	var skip_shems=JSON.parse(localStorage.getItem("skip-shems"));
+	if(skip_shems){
+		word = parse_verb(data); 		// try once
+		if (word == undefined) {
+			// Bad word
+			getWord(word_callback);
+			return;
+		}
+		word_callback(word);
+	}else{
+		word = parse_noun_adje(data); 		// try once
+		if (word == undefined)
+			word = parse_verb(data);	// try twice
+		if (word == undefined) {
+			// Bad word
+			getWord(word_callback);
+			return;
+		}
+		word_callback(word);
+	}
+
+}
 
 var word_callback;
 function getWord(callback) {
+	if (!callback) {
+		console.error("getWord must recieve a callback function.");
+		return undefined;
+	}
 	word_callback = callback;
 
 	// activate jsonp
 	script = document.createElement('script');
- 	script.src = 'http://jsonp.afeld.me/?callback=parse_data&url=https%3A%2F%2Fhe.wiktionary.org%2Fwiki%2F%25D7%259E%25D7%2599%25D7%2595%25D7%2597%25D7%2593%3A%25D7%2590%25D7%25A7%25D7%25A8%25D7%2590%25D7%2599';
+	url = 'https%3A%2F%2Fhe.wiktionary.org%2Fwiki%2F%25D7%259E%25D7%2599%25D7%2595%25D7%2597%25D7%2593%3A%25D7%2590%25D7%25A7%25D7%25A8%25D7%2590%25D7%2599';
+ 	script.src = 'http://jsonp.afeld.me/?callback=parse_data&url=' + url;
 	script.src += '&version=' + Math.random(); // prevent caching
 
 	document.getElementsByTagName('head')[0].appendChild(script);
@@ -134,70 +240,109 @@ function printWordToScreen(wordObj) {
 function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 	var stats=JSON.parse(localStorage.getItem("stats"));
 	var count=parseInt(JSON.parse(localStorage.getItem("count")));
-	stats.found+=1;count-=1;
-	var newWordObj={};
-	newWordObj.word=wordObj['hebword'];
-	newWordObj.syllable=String(countSyllables(wordObj['pronounciation']));
-	newWordObj.info=wordObj['sex'];
-	stats.infos[newWordObj.info]=parseInt(stats.infos[newWordObj.info])+1;
-	stats.avg=(parseFloat(stats.avg)*(parseFloat(stats.found)-1)+parseFloat(newWordObj.syllable))/(parseFloat(stats.found));
-
-	if(wordObj['type']=="shem"){
-		stats.types["shem"]=parseInt(stats.types["shem"])+1;
-		var arr=JSON.parse(localStorage.getItem("added-shmes"));
-		arr.push(newWordObj);
-		localStorage.setItem("added-shmes",JSON.stringify(arr));
-	}else if(wordObj['type']=="adje"){
-		stats.types["adje"]=parseInt(stats.types["adje"])+1;
-		var arr=JSON.parse(localStorage.getItem("added-adjes"));
-		arr.push(newWordObj);
-		localStorage.setItem("added-adjes",JSON.stringify(arr));
-	}else if(wordObj['type']=="verb"){
-		stats.types["verb"]=parseInt(stats.types["verb"])+1;
-		var arr=JSON.parse(localStorage.getItem("added-verbs"));
-		arr.push(newWordObj);
-		localStorage.setItem("added-verbs",JSON.stringify(arr));
-	}
 	
-	var pluralObj={};
-	if(wordObj['plural']!=="unknown"){
-		stats.found+=1;count-=1;
-		stats.hasPlural+=1;
-		pluralObj.word=wordObj['plural'];
-		pluralObj.syllable=String(parseInt(newWordObj.syllable)+ wordObj.n_of_words);
-		stats.avg=(parseFloat(stats.avg)*(parseFloat(stats.found)-1)+parseFloat(pluralObj.syllable))/(parseFloat(stats.found));
-		if(newWordObj.info==="יחיד"){
-			pluralObj.info="רבים";
-			stats.infos["רבים"]=parseInt(stats.infos["רבים"])+1;
-		}else{
-			pluralObj.info="רבות";
-			stats.infos["רבות"]=parseInt(stats.infos["רבות"])+1;
+	if(wordObj['type']=="verb"){
+		var binyanim=wordObj['binyanim'];
+		for(var i in binyanim){
+			var binyan=binyanim[i];
+			if(binyan==undefined)
+				continue;
+
+			stats.found+=1;count-=1;
+			var currWordObj={};
+			currWordObj.word=binyan;
+			currWordObj.info="יחיד";
+			currWordObj.syllable=countSyllablesVerb("יחיד",i);
+
+			console.log(currWordObj);
+
+			stats.infos[currWordObj.info]=parseInt(stats.infos[currWordObj.info])+1;
+			stats.avg=(parseFloat(stats.avg)*(parseFloat(stats.found)-1)+parseFloat(currWordObj.syllable))/(parseFloat(stats.found));
+
+			if(i==0||i==4||i==1){
+				stats.types["verb"]=parseInt(stats.types["verb"])+1;
+				var arr=JSON.parse(localStorage.getItem("added-verbs"));
+				if(i==1)
+					currWordObj.word=currWordObj.word+" מ";
+				arr.push(currWordObj);
+				localStorage.setItem("added-verbs",JSON.stringify(arr));
+			}
+			if(i==2||i==3||i==5|i==6){
+				stats.types["adje"]=parseInt(stats.types["adje"])+1;
+				var arr=JSON.parse(localStorage.getItem("added-adjes"));
+				arr.push(currWordObj);
+				localStorage.setItem("added-adjes",JSON.stringify(arr));				
+			}
+
+			/*
+			Plural? female? female plural?
+			 
+			if(wordObj['type']=="verb"){
+				stats.types["verb"]=parseInt(stats.types["verb"])+1;
+				var arr=JSON.parse(localStorage.getItem("added-verbs"));
+				arr.push(pluralObj);
+				localStorage.setItem("added-verbs",JSON.stringify(arr));
+			}
+			*/
+			
+
 		}
+
+	}else{
+		stats.found+=1;count-=1;
+		var newWordObj={};
+		newWordObj.word=wordObj['hebword'];
+		newWordObj.syllable=String(countSyllables(wordObj['pronounciation']));
+		newWordObj.info=wordObj['sex'];
+		stats.infos[newWordObj.info]=parseInt(stats.infos[newWordObj.info])+1;
+		stats.avg=(parseFloat(stats.avg)*(parseFloat(stats.found)-1)+parseFloat(newWordObj.syllable))/(parseFloat(stats.found));
 
 		if(wordObj['type']=="shem"){
 			stats.types["shem"]=parseInt(stats.types["shem"])+1;
 			var arr=JSON.parse(localStorage.getItem("added-shmes"));
-			arr.push(pluralObj);
+			arr.push(newWordObj);
 			localStorage.setItem("added-shmes",JSON.stringify(arr));
 		}else if(wordObj['type']=="adje"){
 			stats.types["adje"]=parseInt(stats.types["adje"])+1;
 			var arr=JSON.parse(localStorage.getItem("added-adjes"));
-			arr.push(pluralObj);
+			arr.push(newWordObj);
 			localStorage.setItem("added-adjes",JSON.stringify(arr));
-		}else if(wordObj['type']=="verb"){
-			stats.types["verb"]=parseInt(stats.types["verb"])+1;
-			var arr=JSON.parse(localStorage.getItem("added-verbs"));
-			arr.push(pluralObj);
-			localStorage.setItem("added-verbs",JSON.stringify(arr));
 		}
+
+		var pluralObj={};
+		if(wordObj['plural']!=="unknown"){
+			stats.found+=1;count-=1;
+			stats.hasPlural+=1;
+			pluralObj.word=wordObj['plural'];
+			pluralObj.syllable=String(parseInt(newWordObj.syllable)+ wordObj.n_of_words);
+			stats.avg=(parseFloat(stats.avg)*(parseFloat(stats.found)-1)+parseFloat(pluralObj.syllable))/(parseFloat(stats.found));
+			if(newWordObj.info==="יחיד"){
+				pluralObj.info="רבים";
+				stats.infos["רבים"]=parseInt(stats.infos["רבים"])+1;
+			}else{
+				pluralObj.info="רבות";
+				stats.infos["רבות"]=parseInt(stats.infos["רבות"])+1;
+			}
+
+			if(wordObj['type']=="shem"){
+				stats.types["shem"]=parseInt(stats.types["shem"])+1;
+				var arr=JSON.parse(localStorage.getItem("added-shmes"));
+				arr.push(pluralObj);
+				localStorage.setItem("added-shmes",JSON.stringify(arr));
+			}else if(wordObj['type']=="adje"){
+				stats.types["adje"]=parseInt(stats.types["adje"])+1;
+				var arr=JSON.parse(localStorage.getItem("added-adjes"));
+				arr.push(pluralObj);
+				localStorage.setItem("added-adjes",JSON.stringify(arr));
+			}
+		}
+
 	}
 
 	localStorage.setItem("stats",JSON.stringify(stats));
 	localStorage.setItem("count",JSON.stringify(count));
 	displayStats(stats);
 	displayJSONdata();
-
-
 
 }
 
@@ -236,8 +381,12 @@ function main(){
 		localStorage.setItem("count",JSON.stringify(count));
 		$("#menu").addClass("hidden");
 		$("#stats-heading").removeClass("hidden");
-		var delay=parseInt($("#delay").val())*1000;
+		var delay=parseInt($("#delay").val());
 		console.log(delay);
+		var checked=document.getElementById('skip-shems').checked;
+		console.log(checked);
+		localStorage.setItem("skip-shems",JSON.stringify(checked));
+
 
 		var stats={};
 		stats.originCount=count;
@@ -250,9 +399,10 @@ function main(){
 		localStorage.setItem("stats",JSON.stringify(stats));
 		displayStats(stats);
 
+		var func=addWordToLocalStorageAndEditStatsAndDisplay;
 		for(var i=0;i<count;i++){
 			setTimeout(function(){
-		 		getWord(addWordToLocalStorageAndEditStatsAndDisplay);
+		 		getWord(func);
 			 }, delay*i);
 			count=parseInt(JSON.parse(localStorage.getItem("count")));
 
