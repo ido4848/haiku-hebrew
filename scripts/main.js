@@ -20,7 +20,7 @@ function getWordFiles(){
 	localStorage.setItem("verbs",JSON.stringify(json));
 	});
 
-	$.getJSON("../words/shems.json", function(json) {
+	$.getJSON("../words/shems2.json", function(json) {
 	//console.log(json); // this will show the info it in firebug console
 	localStorage.setItem("shems",JSON.stringify(json));
 	});
