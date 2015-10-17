@@ -103,7 +103,6 @@ def deleteDuplicatesFromJSON(file,newFile):
 files=["../words/add-shems1-no-dups.json","../words/add-shems2-no-dups.json","../words/add-shems3-no-dups.json","../words/add-shems4-no-dups.json"]
 newFile="../words/add-shems-total.json"
 mergeJSONs(files,newFile)
-
 '''
 
 
