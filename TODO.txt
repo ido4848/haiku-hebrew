@@ -1,3 +1,5 @@
+errors in voc, maybe should add new types as verb0,verb1 and etc.
+
 kishor words
 
 mobile version
