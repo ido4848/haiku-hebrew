@@ -32,7 +32,7 @@ function getWordFiles(k){
 
 
 function main(){
-	var k=4;
+	var k=5;
 	getWordFiles(k);
 
 }
@@ -103,10 +103,11 @@ function createArrToSyllable(arr,syllable){
 
 function randomLine(syllable,arr){
 	var failedFlag=true;
+	var line="מספר הברות מאוד מוזר";
 	while(failedFlag){
+		//console.log("trying in randomLine");
 		failedFlag=false;
 		var currType=getRandomFromArr(arr);
-		var line="מספר הברות מוזר";
 		if(syllable==5){
 			line=random5syllableLine(currType);
 		}
@@ -118,9 +119,12 @@ function randomLine(syllable,arr){
 			continue;
 		}
 	}
+	return line;
+
 }
 
 function random5syllableLine(type){
+	//console.log("trying in random5syllableLine");
 	var line="";
 	if(type==0){
 		//shem adje
@@ -151,6 +155,7 @@ function random5syllableLine(type){
 
 
 function random7syllableLine(type){
+	//console.log("trying in random7syllableLine");
 	var line="";
 	if(type==0){
 		//shem adje verb
@@ -181,6 +186,7 @@ function random7syllableLine(type){
 
 
 function createLine(typeArr,syllablesIn){
+	//console.log("trying in createLine");
 	words=[];
 	syllables=syllablesIn;
 	var failedFlag=false;
@@ -225,7 +231,7 @@ function createLine(typeArr,syllablesIn){
 
 	}//for end
 
-	if(flag){
+	if(failedFlag){
 		return "";
 	}
 
