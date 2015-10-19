@@ -27,7 +27,17 @@ function countSyllablesVerb(info,binyan) {
 	// info is in {"יחיד","יחידה","רבים","רבות"}
 	//  binyan is in {0,...,6}
 	//  it is assumed the GIZRA is SHLEMIM
+	/*
+	0: pa'al
+	1:nifal
+	2:hefail
+	3:hofal
+	4:piel
+	5:poal
+	6:hitpael
+	 */
 	
+
 	if(info=="יחיד"){
 		if(binyan==0)
 			return 2;
@@ -44,9 +54,40 @@ function countSyllablesVerb(info,binyan) {
 		if(binyan==6)
 			return 3;//used as adje
 
-
-
 	}
+	if(info=="יחידה"){
+		if(binyan==0)
+			return 3;
+		if(binyan==1)
+			return 3;//adding מ
+		if(binyan==2)
+			return 3;//used as adje
+		if(binyan==3)
+			return 3;//used as adje
+		if(binyan==4)
+			return 4;
+		if(binyan==5)
+			return 4;//used as adje
+		if(binyan==6)
+			return 4;//used as adje
+	}
+	if(info=="רבים"||info=="רבות"){
+		if(binyan==0)
+			return 2;
+		if(binyan==1)
+			return 3;//adding מ
+		if(binyan==2)
+			return 3;//used as adje
+		if(binyan==3)
+			return 3;//used as adje
+		if(binyan==4)
+			return 3;
+		if(binyan==5)
+			return 4;//used as adje
+		if(binyan==6)
+			return 3;//used as adje
+	}
+
 	
 
 	return 0;
@@ -252,6 +293,7 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 			currWordObj.word=binyan;
 			currWordObj.info="יחיד";
 			currWordObj.syllable=String(countSyllablesVerb("יחיד",i));
+			currWordObj.binyan=String(i);
 
 			stats.infos[currWordObj.info]=parseInt(stats.infos[currWordObj.info])+1;
 			stats.avg=(parseFloat(stats.avg)*(parseFloat(stats.found)-1)+parseFloat(currWordObj.syllable))/(parseFloat(stats.found));
@@ -260,9 +302,10 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 			//and now for the female and plurals
 
 			stats.found+=3;
-			var femaleObj={};femaleObj.info="יחידה";femaleObj.syllable=String(parseInt(currWordObj.syllable)+1);
-			var malePluralObj={};malePluralObj.info="רבים";malePluralObj.syllable=currWordObj.syllable;
-			var femalePluralObj={};femalePluralObj.info="רבות";femalePluralObj.syllable=currWordObj.syllable;
+			var femaleObj={};femaleObj.info="יחידה";femaleObj.syllable=String(countSyllablesVerb("יחידה",i));
+			var malePluralObj={};malePluralObj.info="רבים";malePluralObj.syllable=String(countSyllablesVerb("רבים",i));
+			var femalePluralObj={};femalePluralObj.info="רבות";femalePluralObj.syllable=String(countSyllablesVerb("רבות",i));
+			femaleObj.binyan=String(i);malePluralObj.binyan=String(i);femalePluralObj.binyan=String(i);
 
 			stats.infos[femaleObj.info]=parseInt(stats.infos[femaleObj.info])+1;
 			stats.infos[malePluralObj.info]=parseInt(stats.infos[malePluralObj.info])+1;
@@ -309,11 +352,11 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 				}
 			}
 			if(i==2||i==3||i==5|i==6){
-				stats.types["adje"]=parseInt(stats.types["adje"])+4;
-				currWordObj.type="adje";
-				femaleObj.type="adje";
-				malePluralObj.type="adje";
-				femalePluralObj.type="adje";				
+				stats.types["binoni"]=parseInt(stats.types["binoni"])+4;
+				currWordObj.type="binoni";
+				femaleObj.type="binoni";
+				malePluralObj.type="binoni";
+				femalePluralObj.type="binoni";				
 			}
 
 			
@@ -436,7 +479,7 @@ function writeToFile2(){
 
 function main(){
 	localStorage.setItem("added-words",JSON.stringify([]));
-	localStorage.setItem("types",JSON.stringify(["shem","adje","verb"]));
+	localStorage.setItem("types",JSON.stringify(["shem","adje","verb","binoni"]));
 	$("#mail").click(mailMeTheArrays);
 
 	$("#submit").click(function(){
