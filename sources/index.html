@@ -29,13 +29,13 @@
   -->
 
 
-    <audio id="audio_bg" loop>
+    <audio id="audio_bg" class="hidden" loop>
       <source src="../sounds/china_music2.mp3"></source>
       <source src="../sounds/china_music2.ogg"></source>
       Your browser isn't invited for super fun audio time.
     </audio>
 
-    <audio id="gong">
+    <audio id="gong" class="hidden" >
       <source src="../sounds/gong3.mp3"></source>
       <source src="../sounds/gong3.ogg"></source>
       Your browser isn't invited for super fun audio time.
@@ -55,14 +55,27 @@
       <source src="../sounds/china_music.mp3" type="audio/mpeg">
     </audio> -->
 
+
+    <!--
+        <div id="title" class="container h1 text-center row">
+    <span class="col col-sm-1"></span>
+    <img class="col col-sm-2" src="../img/logo_left.jpg" alt=""  height="180px">
+    <img class="col col-sm-6" src="../img/logo2.jpg" alt=""  height="180px">
+    <img class="col col-sm-2" src="../img/logo_right.jpg" alt=""  height="180px">
+    <span class="col col-sm-1"></span>
+    </div>
+    -->
+
     <div id="title" class="container h1 text-center">
-    <img src="../img/logo_left.jpg" alt=""  height="180px">
-    <img src="../img/logo2.jpg" alt=""  height="180px">
-    <img src="../img/logo_right.jpg" alt=""  height="180px">
+    <img class="logo" src="../img/logo_left.jpg" alt="">
+    <img id="logo-middle" class="logo" src="../img/logo2.jpg" alt="">
+    <img class="logo" src="../img/logo_right.jpg" alt="">
     </div>
 
-    <br>
-    <br>
+    <span class="possible-brs hidden">
+      <br><br><br><br>
+    </span>
+
 
     <div id="haiku" class="text-center">
       <div id="line1" class="haiku-line text-center">אתר זה נוצר</div>
@@ -71,22 +84,35 @@
     </div>
 
     <br>
-    <br>
 
+    <span class="possible-brs hidden">
+      <br>
+    </span>
 
     <div id="menu" class="text-center">
-    <img id="toggle-sound" src="../img/audio_sound.jpg" alt=""  height="25px">
+    <img id="toggle-sound" src="../img/audio_sound.jpg" alt="" >
     <br>
     <br>
-    <img id="random-haiku" src="../img/random_haiku.jpg" alt=""  height="110px">
+
+    <span class="possible-brs hidden">
+      <br>
+    </span>
+
+    <img id="random-haiku" src="../img/random_haiku.jpg" alt="">
+
+    <span class="possible-brs hidden">
+      <br>
+    </span>
 
     <br>
-    <img id="random-line3" src="../img/random_line3.jpg" alt=""  height="60px">
-    <img id="random-line2" src="../img/random_line2.jpg" alt=""  height="60px">
-    <img id="random-line1" src="../img/random_line1.jpg" alt=""  height="60px">
+    <img class="random-line" id="random-line3" src="../img/random_line3.jpg" alt="" >
+    <img class="random-line" id="random-line2" src="../img/random_line2.jpg" alt="" >
+    <img class="random-line" id="random-line1" src="../img/random_line1.jpg" alt="" >
     </div>
-
-    <br>
+    
+    <span class="possible-brs hidden">
+      <br><br>
+    </span>
     <br>
     <div class="text-center">
       <button id="error">יש בעיה בהייקו הזה</button>
@@ -96,25 +122,29 @@
     ©כל הזכויות שמורות לעדו איזנבוד, יובל כץ ואיתי שיפטן©</div>
 
 
-<div class="text-center">
-<!-- Start of StatCounter Code for Default Guide -->
+    <div id="stat-counter" class="text-center">
+    <!-- Start of StatCounter Code for Default Guide -->
 <script type="text/javascript">
-var sc_project=10657044; 
-var sc_invisible=0; 
-var sc_security="d004369e"; 
-var scJsHost = (("https:" == document.location.protocol) ?
-"https://secure." : "http://www.");
-document.write("<sc"+"ript type='text/javascript' src='" +
-scJsHost+
-"statcounter.com/counter/counter.js'></"+"script>");
+    var sc_project=10657044; 
+    var sc_invisible=0; 
+    var sc_security="d004369e"; 
+    var scJsHost = (("https:" == document.location.protocol) ?
+    "https://secure." : "http://www.");
+    document.write("<sc"+"ript type='text/javascript' src='" +
+    scJsHost+
+    "statcounter.com/counter/counter.js'></"+"script>");
 </script>
-<noscript><div class="statcounter"><a title="web analytics"
-href="http://statcounter.com/" target="_blank"><img
-class="statcounter"
-src="http://c.statcounter.com/10657044/0/d004369e/0/"
-alt="web analytics"></a></div></noscript>
-<!-- End of StatCounter Code for Default Guide -->
+    <noscript>
+    <div class="statcounter">
+    <a title="web analytics"
+    href="http://statcounter.com/" target="_blank"><img
+    class="statcounter"
+    src="http://c.statcounter.com/10657044/0/d004369e/0/"
+    alt="web analytics">
+    </a>
+    </div>
+    </noscript>
+    <!-- End of StatCounter Code for Default Guide -->
 </div>
-
-  </body>
+</body>
 </html>

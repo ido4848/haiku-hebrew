@@ -3,26 +3,57 @@
     src: url(../fonts/tnua-libre-webfont.woff);
 }
 
+html{
+
+}
+
 body{
 	background: black;
 	background-image: url("../img/bg2.jpg");
-    background-size:100% 100%;             
-    background-repeat: no-repeat;           
+    background-size:100% 130%;             
+    background-repeat: no-repeat;     
 	
+}
+
+.logo{
+	width: 12vmin;
+}
+
+#logo-middle{
+	width: 38vmin;
 }
 
 .haiku-line{
 	color: white;
 	font-family: hebFont;
-	font-size: 60px;
+	font-size: 4.3vw;
 
 }
+
+#random-haiku{
+	width: 26vmin;
+}
+
+.random-line{
+	width: 20vmin;
+}
+
+
+#toggle-sound{
+	width: 4vmin;
+}
+
+#error{
+	font-size:2vmin;
+}
+
 
 #rights{
 	color: white;
 	font-family: hebFont;
-	font-szie:10px;
+	font-size:2vmin;
 }
+
 
 /*
 #random-haiku:HOVER{

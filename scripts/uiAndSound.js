@@ -92,6 +92,19 @@ function setUiAndSound(){
 	setClickAndMouseHandlersLine(1);
 	setClickAndMouseHandlersLine(2);
 	setClickAndMouseHandlersLine(3);
+	$(window).on('resize', function(){
+      	var win = $(this); //this = window
+      	console.log(win);
+
+      	if(win.width()<=600){
+      		$(".possible-brs").addClass("hidden");
+      	}else if (win.width() <= 1000) {
+       		$(".possible-brs").removeClass("hidden");
+		}else{
+			$(".possible-brs").addClass("hidden");
+		}
+      //if (win.width() >= 1280) { /* ... */ }
+	});
 }
 
 $(document).ready(setUiAndSound);
