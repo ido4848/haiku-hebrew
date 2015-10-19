@@ -3,11 +3,10 @@
     src: url(../fonts/tnua-libre-webfont.woff);
 }
 
-
 body{
 	background: black;
 	background-image: url("../img/bg2.jpg");
-    background-size:   cover;                      /* <------ */
+    background-size:100% 100%;             
     background-repeat: no-repeat;           
 	
 }
