@@ -43,9 +43,9 @@ function getRandomFromArr(arr){
 
 function randomHaiku(haikuType){
 	localStorage.setItem("haiku-sent","0");
-	$("#line1").html(random5syllableLine( getRandomFromArr([0,1,2,3,4,5])  ));
-	$("#line2").html(random7syllableLine( getRandomFromArr([0,1,2,3,4,5,6,7,8]) ));
-	$("#line3").html(random5syllableLine( getRandomFromArr([0,1,2,3,4,5])  ));
+	$("#line1").html(randomLine(5,[0,1,2,3,4,5]));
+	$("#line2").html(randomLine(7,[0,1,2,3,4,5,6,7,8]));
+	$("#line3").html(randomLine(5,[0,1,2,3,4,5]));
 }
 
 function createArrByType(arr,type){
@@ -101,6 +101,25 @@ function createArrToSyllable(arr,syllable){
 }
 
 
+function randomLine(syllable,arr){
+	var failedFlag=true;
+	while(failedFlag){
+		failedFlag=false;
+		var currType=getRandomFromArr(arr);
+		var line="מספר הברות מוזר";
+		if(syllable==5){
+			line=random5syllableLine(currType);
+		}
+		if(syllable==7){
+			line=random7syllableLine(currType);
+		}
+		if(line==""){
+			failedFlag=true;
+			continue;
+		}
+	}
+}
+
 function random5syllableLine(type){
 	var line="";
 	if(type==0){
@@ -127,8 +146,9 @@ function random5syllableLine(type){
 	}
 	return line
 
-	binoni
 }
+
+
 
 function random7syllableLine(type){
 	var line="";
@@ -161,69 +181,64 @@ function random7syllableLine(type){
 
 
 function createLine(typeArr,syllablesIn){
-	var flag=true;
-	while(flag){
-		words=[];
-		syllables=syllablesIn;
-		flag=false;
-		var info="";
-		for(var i in typeArr){
-			if(flag){
-				break;
+	words=[];
+	syllables=syllablesIn;
+	var failedFlag=false;
+	var info="";
+	for(var i in typeArr){
+		if(failedFlag){
+			break;
+		}
+		var currType=typeArr[i];
+		var availableWords=JSON.parse(localStorage.getItem("words"));
+		if(i==0){
+			if(availableWords.length==0){
+				failedFlag=true;
+				continue;
 			}
-			var currType=typeArr[i];
-			var availableWords=JSON.parse(localStorage.getItem("words"));
-			if(i==0){
-				if(availableWords.length==0){
-					flag=true;
-					continue;
-				}
-				availableWords=createArrByType(availableWords,currType);
-				var wordObj=getRandomFromArr(availableWords);
-				syllables-=wordObj['syllable'];
-				info=wordObj['info'];
-				words.push(wordObj['word']);
+			availableWords=createArrByType(availableWords,currType);
+			var wordObj=getRandomFromArr(availableWords);
+			syllables-=wordObj['syllable'];
+			info=wordObj['info'];
+			words.push(wordObj['word']);
 
-			}else if(i==typeArr.length-1){
-				availableWords=createArrByType(createArrByInfo(createArrBySyllable(availableWords,syllables),info),currType);
-				if(availableWords.length==0){
-					flag=true;
-					continue;
-				}
-				var wordObj=getRandomFromArr(availableWords);
-				syllables-=wordObj['syllable'];
-				words.push(wordObj['word']);
-
-			}else{
-				availableWords=createArrByType(createArrByInfo(createArrToSyllable(availableWords,syllables),info),currType);
-				if(availableWords.length==0){
-					flag=true;
-					continue;
-				}
-				var wordObj=getRandomFromArr(availableWords);
-				syllables-=wordObj['syllable'];
-				words.push(wordObj['word']);
+		}else if(i==typeArr.length-1){
+			availableWords=createArrByType(createArrByInfo(createArrBySyllable(availableWords,syllables),info),currType);
+			if(availableWords.length==0){
+				failedFlag=true;
+				continue;
 			}
+			var wordObj=getRandomFromArr(availableWords);
+			syllables-=wordObj['syllable'];
+			words.push(wordObj['word']);
 
-		}//for end
-
-		if(flag){
-			continue;
+		}else{
+			availableWords=createArrByType(createArrByInfo(createArrToSyllable(availableWords,syllables),info),currType);
+			if(availableWords.length==0){
+				failedFlag=true;
+				continue;
+			}
+			var wordObj=getRandomFromArr(availableWords);
+			syllables-=wordObj['syllable'];
+			words.push(wordObj['word']);
 		}
 
-		for(var j in words){
-			if(j==0){
-				line=words[0];
-			}else{
-				line+=" "+words[j];
-			}
-		}
+	}//for end
 
-	}//while end
+	if(flag){
+		return "";
+	}
+
+	for(var j in words){
+		if(j==0){
+			line=words[0];
+		}else{
+			line+=" "+words[j];
+		}
+	}
+
 	return line
 }
-
-
 
 
 $(document).ready(main);

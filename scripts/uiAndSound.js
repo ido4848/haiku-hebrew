@@ -58,9 +58,9 @@ function setClickAndMouseHandlersLine(num){
 		localStorage.setItem("haiku-sent","0");
 		playGong();
 		if(num==2)
-			$(lineSelector).html(random7syllableLine( getRandomFromArr([0,1,2,3,4,5,6,7,8]) ));
+			$(lineSelector).html(randomLine(7,[0,1,2,3,4,5,6,7,8]));
 		else
-			$(lineSelector).html(random5syllableLine( getRandomFromArr([0,1,2,3,4,5]) ));
+			$(lineSelector).html(randomLine(5,[0,1,2,3,4,5]));
 	});
 	$(buttonSelector).mouseup(function() {
   		$(buttonSelector).attr("src",img);
