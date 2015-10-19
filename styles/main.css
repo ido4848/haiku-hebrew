@@ -16,31 +16,31 @@ body{
 }
 
 .logo{
-	width: 12vmin;
+	width: 6vmax;
 }
 
 #logo-middle{
-	width: 38vmin;
+	width: 25vmax;
 }
 
 .haiku-line{
 	color: white;
 	font-family: hebFont;
-	font-size: 4.3vw;
+	font-size: 4.3vmax;
 
 }
 
 #random-haiku{
-	width: 26vmin;
+	height: 15vmax;
 }
 
 .random-line{
-	width: 20vmin;
+	width: 20vw;
 }
 
 
 #toggle-sound{
-	width: 4vmin;
+	width: 4vmax;
 }
 
 #error{
@@ -54,6 +54,17 @@ body{
 	font-size:2vmin;
 }
 
+
+.dialog-title{
+	font-family: hebFont;
+	font-size: 2vw;
+}
+
+
+.dialog-text{
+	font-family: hebFont;
+	font-size: 1vw;
+}
 
 /*
 #random-haiku:HOVER{

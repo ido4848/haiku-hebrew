@@ -36,7 +36,10 @@ function checkDate(){
 
 function sendErrorMsg(){
 	if(localStorage.getItem("haiku-sent")==="1"){
-		alert("הודעת השגיאה עבור ההייקו הזה כבר נשלחה.");
+		bootbox.dialog({
+			  title: '<div class="dialog-title text-center">!תודה</div>',
+			  message: '<div class="dialog-text text-center">.הודעת השגיאה עבור ההייקו הזה כבר נשלחה</div>'
+			});
 		return;
 	}
 	var currHaiku1=$("#line1").text();
@@ -67,9 +70,13 @@ function sendErrorMsg(){
 	    }
 	  }
 	 }).done(function(response) {
-	   console.log(response); // if you're into that sorta thing
-	   alert("תודה על פנייתך, הודעת השגיאה נשלחה.");
-	   localStorage.setItem("haiku-sent","1");
+	   	console.log(response); // if you're into that sorta thing
+
+		bootbox.dialog({
+		  title: '<div class="dialog-title text-center">!תודה</div>',
+		  message: '<div class="dialog-text text-center">.תודה על פנייתך, הודעת השגיאה נשלחה</div>'
+		});
+	   	localStorage.setItem("haiku-sent","1");
 	 });
 	
 }

@@ -92,19 +92,40 @@ function setUiAndSound(){
 	setClickAndMouseHandlersLine(1);
 	setClickAndMouseHandlersLine(2);
 	setClickAndMouseHandlersLine(3);
+
+  	var win = $(this); //this = window
+
+  	if(win.width()<=600){
+   		$(".possible-brs-sm").removeClass("hidden");
+   		$(".possible-brs-mid").addClass("hidden");
+  		 
+  	}else if (win.width() <= 1000) {
+   		$(".possible-brs-mid").removeClass("hidden");
+   		$(".possible-brs-sm").addClass("hidden");
+	}else{
+		$(".possible-brs-mid").addClass("hidden");
+		$(".possible-brs-sm").addClass("hidden");
+	}
+
+	
 	$(window).on('resize', function(){
       	var win = $(this); //this = window
-      	console.log(win);
 
       	if(win.width()<=600){
-      		$(".possible-brs").addClass("hidden");
+       		$(".possible-brs-sm").removeClass("hidden");
+       		$(".possible-brs-mid").addClass("hidden");
+      		 
       	}else if (win.width() <= 1000) {
-       		$(".possible-brs").removeClass("hidden");
+       		$(".possible-brs-mid").removeClass("hidden");
+       		$(".possible-brs-sm").addClass("hidden");
 		}else{
-			$(".possible-brs").addClass("hidden");
+			$(".possible-brs-mid").addClass("hidden");
+			$(".possible-brs-sm").addClass("hidden");
 		}
       //if (win.width() >= 1280) { /* ... */ }
 	});
+
+
 }
 
 $(document).ready(setUiAndSound);
