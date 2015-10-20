@@ -1,8 +1,13 @@
 @font-face {
     font-family: hebFont;
-    src: url(../fonts/tnua-libre-webfont.woff);
+    src: url(../fonts/simpleclm/simpleclm-medium-webfont.woff);
 }
-
+/*
+../fonts/simpleclm/simpleclm-medium-webfont.woff
+../fonts/tnua/tnua-libre-webfont.woff
+../fonts/hillel-otf/HillelCLM-Medium.otf
+../fonts/trashim-otf/TrashimCLM-Bold.otf
+ */
 html{
 
 }
@@ -26,7 +31,7 @@ body{
 .haiku-line{
 	color: white;
 	font-family: hebFont;
-	font-size: 4.3vmax;
+	font-size: 6vmax;
 
 }
 
@@ -35,7 +40,7 @@ body{
 }
 
 .random-line{
-	width: 20vw;
+	height: 5vmax;
 }
 
 
