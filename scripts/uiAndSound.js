@@ -76,7 +76,7 @@ function changeGui(){
  	DEVICE: W,H
 	
 	PHONES:
- 	nexus 5: 360,640
+ 	nexus 5: 360,640 980,1416?
  	nexus 4: 384,640
  	iphone 5: 320,568
  	iphone 6: 375,667
@@ -98,7 +98,17 @@ function changeGui(){
 	 */
 	
  	var win = $(this); //this = window
+ 	//alert(win.width()+","+win.height());
+ 	//alert(win.width()+","+win.height());
 	
+
+ 	if(win.width()>=win.height()){
+ 		desktopGui();
+ 	}else{
+ 		phoneGui();
+ 	}
+
+ 	/*
 	if(win.width()<=450 && win.height()<=760){
 		//phone or phablet
 		//w<h
@@ -112,6 +122,7 @@ function changeGui(){
 		//w>h
 		desktopGui();
 	}
+	*/
  	
 }
 
@@ -155,7 +166,7 @@ function desktopGui(){
 
 	$(".logo").width("7vw");
 	$("#logo-middle").width("25vw");
-	$("#logo-middle").height("15vh");
+	$("#logo-middle").height("18vh");
 
 	$(".haiku-line").css("font-size","6vh");
 
@@ -163,7 +174,7 @@ function desktopGui(){
 	$("#toggle-sound").css("height","2vh");
 
 	$("#random-haiku").css("width","27vw");
-	$("#random-haiku").css("height","17vh");
+	$("#random-haiku").css("height","20vh");
 
 	$(".random-line").css("width","18vw");
 	$(".random-line").css("height","6vh");
