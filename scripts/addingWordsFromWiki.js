@@ -203,7 +203,7 @@ function parse_verb(data) {
 		var table_cells = table_rows[i].match(/<td>[\s\S]*?<\/td>/g);
 		var word_str = table_cells[1].replace(/<.*?>/g, "").replace(" ", "");
 		if (!word_str.match(/[-\.,]/g) && !word_str.match("או") && !word_str.match("פעול") && word_str != "")
-			word.binyanim[i] = to_ktiv_hasser(word_str);
+			word.binyanim[i] = (word_str);//to_ktiv_hasser(word_str);
 	}
 
 	return word;
