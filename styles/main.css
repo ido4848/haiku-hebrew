@@ -1,28 +1,74 @@
 @font-face {
     font-family: hebFont;
-    src: url(../fonts/tnua-libre-webfont.woff);
+    src: url(../fonts/simpleclm/simpleclm-medium-webfont.woff);
 }
+/*
+../fonts/simpleclm/simpleclm-medium-webfont.woff
+../fonts/tnua/tnua-libre-webfont.woff
+../fonts/hillel-otf/HillelCLM-Medium.otf
+../fonts/trashim-otf/TrashimCLM-Bold.otf
+ */
+html{
 
+}
 
 body{
 	background: black;
 	background-image: url("../img/bg2.jpg");
-    background-size:   cover;                      /* <------ */
-    background-repeat: no-repeat;           
+    background-size:100% 130%;             
+    background-repeat: no-repeat;     
 	
+}
+
+.logo{
+	width: 6vmax;
+}
+
+#logo-middle{
+	width: 28vmax;
 }
 
 .haiku-line{
 	color: white;
 	font-family: hebFont;
-	font-size: 60px;
+	font-size: 6vmax;
 
 }
+
+#random-haiku{
+	height: 12vmax;
+}
+
+.random-line{
+	height: 5vmax;
+}
+
+
+#toggle-sound{
+	width: 4vmax;
+}
+
+#error{
+	width:20vw;
+}
+
 
 #rights{
 	color: white;
 	font-family: hebFont;
-	font-szie:10px;
+	font-size:2vmin;
+}
+
+
+.dialog-title{
+	font-family: hebFont;
+	font-size: 2vw;
+}
+
+
+.dialog-text{
+	font-family: hebFont;
+	font-size: 1vw;
 }
 
 /*
