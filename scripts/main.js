@@ -14,12 +14,19 @@ kishor=[של,על,ב,ו,ל,ה]
  */
 
 
-function getWordFiles(k){
+function getWordFiles(k,nikkudFlag){
 
-	var data=[]
+	var data=[];
+	var fileName="";
+	if(nikkudFlag)
+		fileName="../words_nikkud/words"
+	else
+		fileName="../words/words"
+
+	
 
 	for(var i=0;i<k;i++){
-		var currFile="../words/words"+i+".json";
+		var currFile=fileName+i+".json";
 		$.getJSON(currFile, function(currData) {
 			for(var j=0;j<currData.length;j++){
 				data.push(currData[j])
@@ -32,8 +39,9 @@ function getWordFiles(k){
 
 
 function main(){
-	var k=5;
-	getWordFiles(k);
+	var k=1;
+	var nikkudFlag=true;
+	getWordFiles(k,nikkudFlag);
 
 }
 

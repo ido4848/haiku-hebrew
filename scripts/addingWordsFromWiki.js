@@ -298,7 +298,7 @@ function printWordToScreen(wordObj) {
 
 
 function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
-	console.log(wordObj);
+	//console.log(wordObj);
 	var stats=JSON.parse(localStorage.getItem("stats"));
 	
 	if(wordObj['type']=="verb"){
