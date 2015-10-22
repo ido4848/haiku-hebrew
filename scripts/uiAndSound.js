@@ -171,10 +171,10 @@ function desktopGui(){
 	$(".haiku-line").css("font-size","6vh");
 
 	$("#toggle-sound").css("width","4vw");
-	$("#toggle-sound").css("height","2vh");
+	$("#toggle-sound").css("height","3.5vh");
 
 	$("#random-haiku").css("width","27vw");
-	$("#random-haiku").css("height","20vh");
+	$("#random-haiku").css("height","22vh");
 
 	$(".random-line").css("width","18vw");
 	$(".random-line").css("height","6vh");
