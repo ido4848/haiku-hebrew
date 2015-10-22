@@ -106,6 +106,14 @@ function to_ktiv_hasser(word) {
 	return word;
 }
 
+function count_hatafim(word) {
+      var ans = 0;    
+      for (var i = 0; i < word.length; i++)
+         if (word[i] == "\u05B2" || word[i] == "\u05B1" || word[i] == "\u05B3")
+             ans++;
+      return ans;
+}
+
 
 function parse_noun_adje(data) {
 	var word = {};
@@ -119,6 +127,14 @@ function parse_noun_adje(data) {
 		// Bad word
 		return undefined;
 	}
+
+	 var hebword_nikkud = str.match(/<span class=\"toctext\">(.*)<\/span>/g);
+    if (!hebword_nikkud) return undefined;
+    hebword_nikkud = hebword_nikkud[0].replace(/<span class=\"toctext\">(.*)<\/span>/g, "$1");
+    hebword_nikkud = hebword_nikkud.replace(/ <.*>/g, "");
+    hebword_nikkud = hebword_nikkud.replace(/ [\(\)\,].*/g, "");
+    hebword_nikkud = hebword_nikkud.replace(/, .*/g, "");
+    word.hebword_nikkud = hebword_nikkud;
 
 	var n_of_words = 1;
 	for (var i = 0; i < word.hebword.length; i++)
@@ -168,8 +184,8 @@ function parse_noun_adje(data) {
 		}
 	}
 	plural = plural.replace("-", " ");
-	plural = plural.replace(/[^אבגדהוזחיטכלמנסעפצקרשתםןץף ]/g, "");
-	word.plural = "unknown";
+	plural = plural.replace(/[^אבגדהוזחיטכלמנסעפצקרשתםןץףְֱֲֳִֵֶַָֹֹֺ  	ֻ  	ּ ֿׁ  ׂ ׇ 	 ׅ    ]/g, "");
+	word.plural = undefined;
 	if (plural.replace(/\s/g, '').length > 0 && plural.length < 25)
 		word.plural = plural;
 
@@ -193,6 +209,7 @@ function parse_verb(data) {
 
 	word.type = "verb";
 	word.binyanim = [];
+	word.hatafim=[];
 
 	var table = str.match(/<table border="1" style="border-collapse: collapse; border: solid 1px black; text-align: center;" cellpadding="3" cellspacing="0">[\s\S]*?<\/table>/g);
 	if (table) table = table[0];
@@ -202,8 +219,10 @@ function parse_verb(data) {
 	for (var i = 0; i < table_rows.length; i++) {
 		var table_cells = table_rows[i].match(/<td>[\s\S]*?<\/td>/g);
 		var word_str = table_cells[1].replace(/<.*?>/g, "").replace(" ", "");
-		if (!word_str.match(/[-\.,]/g) && !word_str.match("או") && !word_str.match("פעול") && word_str != "")
-			word.binyanim[i] = to_ktiv_hasser(word_str);
+		if (!word_str.match(/[-\.,]/g) && !word_str.match("או") && !word_str.match("פעול") && word_str != ""){
+			word.binyanim[i] = word_str//to_ktiv_hasser(word_str);
+			word.hatafim[i]=count_hatafim(word_str);
+		}
 	}
 
 	return word;
@@ -279,6 +298,7 @@ function printWordToScreen(wordObj) {
 
 
 function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
+	console.log(wordObj);
 	var stats=JSON.parse(localStorage.getItem("stats"));
 	
 	if(wordObj['type']=="verb"){
@@ -292,7 +312,9 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 			var currWordObj={};
 			currWordObj.word=binyan;
 			currWordObj.info="יחיד";
-			currWordObj.syllable=String(countSyllablesVerb("יחיד",i));
+			var addHET = ['ח'].indexOf(currWordObj.word[currWordObj.word.length-1]);
+			addHET+=1;//why it works? think.
+			currWordObj.syllable=String(countSyllablesVerb("יחיד",i)+wordObj.hatafim[i]+addHET);
 			currWordObj.binyan=String(i);
 
 			stats.infos[currWordObj.info]=parseInt(stats.infos[currWordObj.info])+1;
@@ -302,9 +324,9 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 			//and now for the female and plurals
 
 			stats.found+=3;
-			var femaleObj={};femaleObj.info="יחידה";femaleObj.syllable=String(countSyllablesVerb("יחידה",i));
-			var malePluralObj={};malePluralObj.info="רבים";malePluralObj.syllable=String(countSyllablesVerb("רבים",i));
-			var femalePluralObj={};femalePluralObj.info="רבות";femalePluralObj.syllable=String(countSyllablesVerb("רבות",i));
+			var femaleObj={};femaleObj.info="יחידה";femaleObj.syllable=String(countSyllablesVerb("יחידה",i)+wordObj.hatafim[i]);
+			var malePluralObj={};malePluralObj.info="רבים";malePluralObj.syllable=String(countSyllablesVerb("רבים",i)+wordObj.hatafim[i]);
+			var femalePluralObj={};femalePluralObj.info="רבות";femalePluralObj.syllable=String(countSyllablesVerb("רבות",i)+wordObj.hatafim[i]);
 			femaleObj.binyan=String(i);malePluralObj.binyan=String(i);femalePluralObj.binyan=String(i);
 
 			stats.infos[femaleObj.info]=parseInt(stats.infos[femaleObj.info])+1;
@@ -375,6 +397,9 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 		stats.found+=1;
 		var newWordObj={};
 		newWordObj.word=wordObj['hebword'];
+		if(wordObj.hebword_nikkud!=undefined){
+			newWordObj.word=wordObj.hebword_nikkud;
+		}
 		newWordObj.syllable=String(countSyllables(wordObj['pronounciation']));
 		newWordObj.info=wordObj['sex'];
 		newWordObj['type']=wordObj['type'];
@@ -391,7 +416,7 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 
 
 		var pluralObj={};
-		if(wordObj['plural']!=="unknown"){
+		if(wordObj['plural']!=undefined){
 			stats.found+=1;
 			stats.hasPlural+=1;
 			pluralObj.word=wordObj['plural'];
