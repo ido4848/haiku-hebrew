@@ -39,12 +39,12 @@ function toggleSound(){
 		var audio = $("#audio_bg")[0];
 		audio.play();
 		localStorage.setItem("sound-state","1");
-		$("#toggle-sound").attr("src","../img/audio_sound.jpg");
+		$("#toggle-sound").attr("src","img/audio_sound.jpg");
 	}else if(state==1){
 		var audio = $("#audio_bg")[0];
 		audio.pause();
 		localStorage.setItem("sound-state","0");
-		$("#toggle-sound").attr("src","../img/audio_mute.jpg");
+		$("#toggle-sound").attr("src","img/audio_mute.jpg");
 	}
 }
 
@@ -52,8 +52,8 @@ function toggleSound(){
 function setClickAndMouseHandlersLine(num){
 	var buttonSelector="#random-line"+num;
 	var lineSelector="#line"+num;
-	var img="../img/random_line"+num+".jpg";
-	var imgDown="../img/random_line"+num+"_down.jpg";
+	var img="img/random_line"+num+".jpg";
+	var imgDown="img/random_line"+num+"_down.jpg";
 	$(buttonSelector).click(function(){
 		localStorage.setItem("haiku-sent","0");
 		playGong();
@@ -199,10 +199,10 @@ function setUiAndSound(){
 		randomHaiku(0);
 	});
 	$( "#random-haiku" ).mouseup(function() {
-  		$( "#random-haiku" ).attr("src","../img/random_haiku.jpg");
+  		$( "#random-haiku" ).attr("src","img/random_haiku.jpg");
 	});
 	$( "#random-haiku" ).mousedown(function() {
-  		$( "#random-haiku" ).attr("src","../img/random_haiku_down.jpg");
+  		$( "#random-haiku" ).attr("src","img/random_haiku_down.jpg");
 	});
 	
 
