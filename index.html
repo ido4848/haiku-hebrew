@@ -1,0 +1,201 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>צור לי הייקו</title>
+
+    <link rel="shortcut icon" type="image/x-icon" href="../img/favicon(1).ico" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="styles/main.css">
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.2/marked.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2014-11-29/FileSaver.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+
+    <script type="text/javascript" src="scripts/errorMsgs.js"></script>
+    <script type="text/javascript" src="scripts/main.js"></script>
+    <script type="text/javascript" src="scripts/uiAndSound.js"></script>
+
+  </head>
+  <body>
+<!--
+    <div style='position:absolute;z-index:0;left:0;top:0;width:100%;height:100%'>
+    <img src="../img/bg2.jpg" style='width:100%;height:100%' alt='[]' />
+  </div>
+  -->
+
+
+    <audio id="audio_bg" class="hidden" loop>
+      <source src="../sounds/china_music2.mp3"></source>
+      <source src="../sounds/china_music2.ogg"></source>
+      Your browser isn't invited for super fun audio time.
+    </audio>
+
+    <audio id="gong" class="hidden" >
+      <source src="../sounds/gong3.mp3"></source>
+      <source src="../sounds/gong3.ogg"></source>
+      Your browser isn't invited for super fun audio time.
+    </audio>
+
+   <!--
+    <object id="audio_bg" data="../sounds/china_music2.mp3" type="video/quicktime" width="0" height="0">
+        <param name="filename" value="../sounds/china_music2.mp3">
+        <param name="autostart" value="1">
+        <param name="playcount" value="true"> 
+    </object>
+
+
+ 
+   <audio controls loop>
+      <source src="horse.ogg" type="audio/ogg">
+      <source src="../sounds/china_music.mp3" type="audio/mpeg">
+    </audio> -->
+
+
+    <!--
+        <div id="title" class="container h1 text-center row">
+    <span class="col col-sm-1"></span>
+    <img class="col col-sm-2" src="../img/logo_left.jpg" alt=""  height="180px">
+    <img class="col col-sm-6" src="../img/logo2.jpg" alt=""  height="180px">
+    <img class="col col-sm-2" src="../img/logo_right.jpg" alt=""  height="180px">
+    <span class="col col-sm-1"></span>
+    </div>
+    -->
+
+
+    <div id="title" class="container h1 text-center">
+    <img class="logo" src="../img/logo_left.jpg" alt="">
+    <img id="logo-middle" class="logo" src="../img/logo2.jpg" alt="">
+    <img class="logo" src="../img/logo_right.jpg" alt="">
+    </div>
+
+    <span class="possible-brs-ph hidden">
+      <br>
+    </span>
+
+    <span class="possible-brs-ta hidden">
+      <br><br>
+    </span>
+
+    <span class="possible-brs-de hidden">
+
+    </span>
+
+    <div id="haiku" class="text-center">
+      <div id="line1" class="haiku-line text-center">אֲתָר זֶה נוֹצַר</div>
+      <div id="line2" class="haiku-line text-center">לְמַעַנְכֶם חֲבֵרַי</div>
+      <div id="line3" class="haiku-line text-center">לַחֲצוּ עַל הַגרֶל</div>
+    </div>
+
+
+    <span class="possible-brs-ph hidden">
+      <br><br>
+    </span>
+
+    <span class="possible-brs-ta hidden">
+      <br><br>
+    </span>
+
+    <span class="possible-brs-de hidden">
+      <br>
+    </span>
+
+    <div id="menu" class="text-center">
+    <img id="toggle-sound" src="../img/audio_sound.jpg" alt="" >
+
+    <span class="possible-brs-ph hidden">
+      <br><br>
+    </span>
+
+    <span class="possible-brs-ta hidden">
+      <br><br>
+    </span>
+
+    <span class="possible-brs-de hidden">
+      <br><br>
+    </span>
+
+    <img id="random-haiku" src="../img/random_haiku.jpg" alt="">
+
+    <span class="possible-brs-ph hidden">
+      <br>
+    </span>
+
+    <span class="possible-brs-ta hidden">
+      <br><br>
+    </span>
+
+    <span class="possible-brs-de hidden">
+      <br>
+    </span>
+    
+    <img class="random-line" id="random-line3" src="../img/random_line3.jpg" alt="" >
+    <img class="random-line" id="random-line2" src="../img/random_line2.jpg" alt="" >
+    <img class="random-line" id="random-line1" src="../img/random_line1.jpg" alt="" >
+    </div>
+    
+    <span class="possible-brs-ph hidden">
+
+    </span>
+
+    <span class="possible-brs-ta hidden">
+      <br><br>
+    </span>
+
+    <span class="possible-brs-de hidden">
+  
+    </span>
+
+    <div class="text-center">
+        <img id="error" src="../img/error.jpg" alt="" >
+    </div>
+
+    <span class="possible-brs-ph hidden">
+      <br><br>
+    </span>
+
+    <span class="possible-brs-ta hidden">
+      <br><br>
+    </span>
+
+    <span class="possible-brs-de hidden">
+      <br>
+    </span>
+    
+      <div id="stat-counter" class="text-center">
+    <!-- Start of StatCounter Code for Default Guide -->
+<script type="text/javascript">
+    var sc_project=10657044; 
+    var sc_invisible=0; 
+    var sc_security="d004369e"; 
+    var scJsHost = (("https:" == document.location.protocol) ?
+    "https://secure." : "http://www.");
+    document.write("<sc"+"ript type='text/javascript' src='" +
+    scJsHost+
+    "statcounter.com/counter/counter.js'></"+"script>");
+</script>
+    <noscript>
+    <div class="statcounter">
+    <a title="web analytics"
+    href="http://statcounter.com/" target="_blank"><img
+    class="statcounter"
+    src="http://c.statcounter.com/10657044/0/d004369e/0/"
+    alt="web analytics">
+    </a>
+    </div>
+    </noscript>
+    <!-- End of StatCounter Code for Default Guide -->
+  </div>
+
+    <div id="rights" class="container text-center"> 
+    ©כל הזכויות שמורות לעדו איזנבוד, יובל כץ, ישי גרוניך ואיתי שיפטן©
+    </div>
+
+
+
+</body>
+</html>
