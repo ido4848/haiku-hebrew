@@ -188,6 +188,18 @@ function desktopGui(){
 
 
 function setUiAndSound(){
+	if(document.images){
+		down1=new Image();
+		down2=new Image();
+		down3=new Image();
+		downH=new Image();
+
+		down1.src="img/random_line1_down.jpg";
+		down2.src="img/random_line2_down.jpg";
+		down3.src="img/random_line3_down.jpg";
+		downH.src="img/random_haiku_down.jpg";
+	}
+
 	var audio = $("#audio_bg")[0];
 	audio.play();
 	localStorage.setItem("sound-state","1");
