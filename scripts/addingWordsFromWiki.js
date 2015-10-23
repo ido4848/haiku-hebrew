@@ -357,6 +357,12 @@ function addWordToLocalStorageAndEditStatsAndDisplay(wordObj){
 
 			}
 
+			/*
+			if(str[str.length-1]=='ת')
+				femaleObj.word=str+"ה";
+			else
+				femaleObj.word=str+"ת";
+			*/
 			femaleObj.word=str+"ת";
 			malePluralObj.word=str+"ים";
 			femalePluralObj.word=str+"ות";

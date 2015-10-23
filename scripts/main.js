@@ -131,27 +131,23 @@ function randomLine(syllable,arr){
 
 }
 
+
+
 function random5syllableLine(type){
 	//console.log("trying in random5syllableLine");
 	var line="";
 	if(type==0){
-		//shem adje
 		line=createLine(["shem","adje"],5);
 	}else if(type==1){
-		//shem verb
 		line=createLine(["shem","verb"],5);
 	}else if(type==2){
-		//binoni verb
-		line=createLine(["binoni","verb"],5);
-	}else if(type==3){
-		//binoni adje
-		line=createLine(["binoni","adje"],5);
-	}else if(type==4){
-		//shem binoni
 		line=createLine(["shem","binoni"],5);
+	}else if(type==3){
+		line=createLine(["shem","verb","shem"],5);
+	}else if(type==4){
+		line=createLine(["shem","verb"],5);//will increase the probability
 	}else if(type==5){
-		//binoni binoni
-		line=createLine(["binoni","binoni"],5);
+		line=createLine(["shem"],5);//experimental
 	}
 	else{
 		line="חמש הברות";
@@ -160,35 +156,39 @@ function random5syllableLine(type){
 
 }
 
-
-
 function random7syllableLine(type){
 	//console.log("trying in random7syllableLine");
+	//shem can be followed by adje or binoni
+	//
+	//should consider also line=createLine(["binoni","verb","shem"],7);
+	
+
 	var line="";
 	if(type==0){
-		//shem adje verb
 		line=createLine(["shem","adje","verb"],7);
 	}else if(type==1){
-		//shem verb adje
-		line=createLine(["shem","verb","adje"],7);
-	}else if(type==2){
-		//shem verb shem
-		line=createLine(["binoni","verb","shem"],7);
-	}else if(type==3){
-		line=createLine(["shem","verb","binoni"],7);
-	}else if(type==4){
-		line=createLine(["binoni","verb","binoni"],7);
-	}else if(type==5){
 		line=createLine(["shem","binoni","verb"],7);
+	}else if(type==2){
+		line=createLine(["shem","verb","shem"],7);
+	}else if(type==3){
+		line=createLine(["shem","adje","verb","shem"],7);
+	}else if(type==4){
+		line=createLine(["shem","binoni","verb","shem"],7);
+	}else if(type==5){
+		line=createLine(["shem","verb","shem","adje"],7);
 	}else if(type==6){
-		line=createLine(["binoni","binoni","verb"],7);
+		line=createLine(["shem","verb","shem","binoni"],7);
 	}else if(type==7){
-		line=createLine(["binoni","adje","verb"],7);
+		line=createLine(["shem","verb"],7);//experimental
 	}else if(type==8){
-		line=createLine(["shem","verb","binoni"],7);
+		line=createLine(["shem"],7);//experimental
 	}else{
 		line="יש פה שבע הברות";
 	}
+	/*
+	if(line!="")
+		console.log(type+":"+line);
+	*/
 	return line
 }
 
@@ -206,16 +206,28 @@ function createLine(typeArr,syllablesIn){
 		var currType=typeArr[i];
 		var availableWords=JSON.parse(localStorage.getItem("words"));
 		if(i==0){
-			if(availableWords.length==0){
-				failedFlag=true;
-				continue;
-			}
-			availableWords=createArrByType(availableWords,currType);
-			var wordObj=getRandomFromArr(availableWords);
-			syllables-=wordObj['syllable'];
-			info=wordObj['info'];
-			words.push(wordObj['word']);
+			if(i==typeArr.length-1){
+				//only one word
+				availableWords=createArrByType(createArrByInfo(createArrBySyllable(availableWords,syllables),info),currType);
+				if(availableWords.length==0){
+					failedFlag=true;
+					continue;
+				}
+				var wordObj=getRandomFromArr(availableWords);
+				syllables-=wordObj['syllable'];
+				words.push(wordObj['word']);
 
+			}else{
+				availableWords=createArrByType(availableWords,currType);
+				if(availableWords.length==0){
+					failedFlag=true;
+					continue;
+				}
+				var wordObj=getRandomFromArr(availableWords);
+				syllables-=wordObj['syllable'];
+				info=wordObj['info'];
+				words.push(wordObj['word']);
+			}
 		}else if(i==typeArr.length-1){
 			availableWords=createArrByType(createArrByInfo(createArrBySyllable(availableWords,syllables),info),currType);
 			if(availableWords.length==0){
@@ -257,3 +269,67 @@ function createLine(typeArr,syllablesIn){
 
 $(document).ready(main);
 
+
+
+/*
+function random5syllableLine(type){
+	//console.log("trying in random5syllableLine");
+	var line="";
+	if(type==0){
+		//shem adje
+		line=createLine(["shem","adje"],5);
+	}else if(type==1){
+		//shem verb
+		line=createLine(["shem","verb"],5);
+	}else if(type==2){
+		//binoni verb
+		line=createLine(["binoni","verb"],5);
+	}else if(type==3){
+		//binoni adje
+		line=createLine(["binoni","adje"],5);
+	}else if(type==4){
+		//shem binoni
+		line=createLine(["shem","binoni"],5);
+	}else if(type==5){
+		//binoni binoni
+		line=createLine(["binoni","binoni"],5);
+	}
+	else{
+		line="חמש הברות";
+	}
+	return line
+
+}
+*/
+
+/*
+function random7syllableLine(type){
+	//console.log("trying in random7syllableLine");
+	var line="";
+	if(type==0){
+		//shem adje verb
+		line=createLine(["shem","adje","verb"],7);
+	}else if(type==1){
+		//shem verb adje
+		line=createLine(["shem","verb","adje"],7);
+	}else if(type==2){
+		//shem verb shem
+		line=createLine(["binoni","verb","shem"],7);
+	}else if(type==3){
+		line=createLine(["shem","verb","binoni"],7);
+	}else if(type==4){
+		line=createLine(["binoni","verb","binoni"],7);
+	}else if(type==5){
+		line=createLine(["shem","binoni","verb"],7);
+	}else if(type==6){
+		line=createLine(["binoni","binoni","verb"],7);
+	}else if(type==7){
+		line=createLine(["binoni","adje","verb"],7);
+	}else if(type==8){
+		line=createLine(["shem","verb","binoni"],7);
+	}else{
+		line="יש פה שבע הברות";
+	}
+	return line
+}
+*/
