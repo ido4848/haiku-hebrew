@@ -19,9 +19,9 @@ function getWordFiles(k,nikkudFlag){
 	var data=[];
 	var fileName="";
 	if(nikkudFlag)
-		fileName="../words_nikkud/words"
+		fileName="words_nikkud/words";//AJAX is made out of index.html
 	else
-		fileName="../words/words"
+		fileName="words/words";//AJAX is made out of index.html
 
 	
 
@@ -29,7 +29,7 @@ function getWordFiles(k,nikkudFlag){
 		var currFile=fileName+i+".json";
 		$.getJSON(currFile, function(currData) {
 			for(var j=0;j<currData.length;j++){
-				data.push(currData[j])
+				data.push(currData[j]);
 			}
 			localStorage.setItem("words",JSON.stringify(data));
 		});
