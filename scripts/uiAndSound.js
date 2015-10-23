@@ -189,15 +189,25 @@ function desktopGui(){
 
 function setUiAndSound(){
 	if(document.images){
-		down1=new Image();
-		down2=new Image();
-		down3=new Image();
-		downH=new Image();
+		//caching
+		
+		line1=new Image();
+		line2=new Image();
+		line3=new Image();
+		haiku=new Image();
+		line1_down=new Image();
+		line2_down=new Image();
+		line3_down=new Image();
+		haiku_down=new Image();
 
-		down1.src="img/random_line1_down.jpg";
-		down2.src="img/random_line2_down.jpg";
-		down3.src="img/random_line3_down.jpg";
-		downH.src="img/random_haiku_down.jpg";
+		line1.src="img/random_line1.jpg";
+		line2.src="img/random_line2.jpg";
+		line3.src="img/random_line3.jpg";
+		haiku.src="img/random_haiku.jpg";
+		line1_down.src="img/random_line1_down.jpg";
+		line2_down.src="img/random_line2_down.jpg";
+		line3_down.src="img/random_line3_down.jpg";
+		haiku_down.src="img/random_haiku_down.jpg";
 	}
 
 	var audio = $("#audio_bg")[0];
