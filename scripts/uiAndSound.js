@@ -240,6 +240,25 @@ function setUiAndSound(){
 	});
 
 
+	$('#dictpicker').selectpicker();
+
+    $('#dictpicker').selectpicker({
+     	style: 'btn-info',
+    	size: 2
+    });
+
+    $("#dictpicker").bind("change dict", function() {
+   		var dictStr=($(this).val());
+   		if(dictStr=="מילון ידני")
+   			getWordDictFiles(3,"manual");
+		else if(dictStr="מילון מבוסס ויקימילון")
+			getWordDictFiles(1,"wiki_nikkud"); 
+	});
+
+	 $('.selectpicker').selectpicker('val', 'מילון ידני');
+	 //$('.selectpicker').selectpicker('render');
+
+
 }
 
 $(document).ready(setUiAndSound);

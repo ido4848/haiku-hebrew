@@ -54,9 +54,9 @@ function getWordFiles(k,nikkudFlag){
 
 
 function main(){
-	var k=1;
+	//var k=1;
 	//var nikkudFlag=true;
-	getWordDictFiles(k,"nikkud");
+	//getWordDictFiles(k,"wiki_nikkud");
 	//getWordFiles(k,nikkudFlag);
 
 }
