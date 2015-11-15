@@ -13,6 +13,21 @@ adj
 kishor=[של,על,ב,ו,ל,ה]
  */
 
+function getWordDictFiles(k,dict){
+	var data=[];
+	var filename="";
+	fileName="words_"+dict+"/words";
+	for(var i=0;i<k;i++){
+		var currFile=fileName+i+".json";
+		$.getJSON(currFile, function(currData) {
+			for(var j=0;j<currData.length;j++){
+				data.push(currData[j]);
+			}
+			localStorage.setItem("words",JSON.stringify(data));
+		});
+	}
+	localStorage.setItem("dict",dict);
+}
 
 function getWordFiles(k,nikkudFlag){
 
@@ -40,8 +55,9 @@ function getWordFiles(k,nikkudFlag){
 
 function main(){
 	var k=1;
-	var nikkudFlag=true;
-	getWordFiles(k,nikkudFlag);
+	//var nikkudFlag=true;
+	getWordDictFiles(k,"nikkud");
+	//getWordFiles(k,nikkudFlag);
 
 }
 
